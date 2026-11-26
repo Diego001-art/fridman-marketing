@@ -13,8 +13,8 @@
    LAYOUT: 5 полноэкранных блоков, блок 5 — горизонтальная галерея кейсов */
 :root{color-scheme:dark;--bg:#070b10;--ink:#f4f5f7;--mut:#a8b0bb;--line:rgba(255,255,255,.14);--red:#ff1f2d;--red2:#c3000f;--hd:'Manrope',system-ui,sans-serif;--gi:'League Gothic','Oswald','Impact',sans-serif;--ease:cubic-bezier(.2,.8,.2,1)}
 *{box-sizing:border-box;min-width:0}
-html{scroll-behavior:smooth}
-@media(min-width:901px){html{scroll-snap-type:y mandatory}}
+html,body{height:100%;overflow:hidden;overscroll-behavior:none}
+#fp{position:fixed;inset:0 0 auto;will-change:transform;transition:transform 1s cubic-bezier(.77,0,.18,1)}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 var(--hd);overflow-x:clip;-webkit-font-smoothing:antialiased}
 a{color:inherit;text-decoration:none}
 button{font:inherit;color:inherit;cursor:pointer}
@@ -63,7 +63,8 @@ img{display:block;max-width:none}
 .pager a.on{opacity:1}.pager a.on::before{width:26px;background:var(--red)}
 
 /* ---------- sections ---------- */
-.sec{position:relative;height:100vh;height:100svh;min-height:640px;overflow:hidden;scroll-snap-align:start;isolation:isolate}
+.sec{position:relative;height:100vh;height:100svh;overflow-x:hidden;overflow-y:auto;scrollbar-width:none;overscroll-behavior:contain;isolation:isolate}
+.sec::-webkit-scrollbar,.slide::-webkit-scrollbar{display:none}
 .bgfx{position:absolute;inset:0;z-index:-2;background:radial-gradient(60% 55% at 55% 35%,#16212c 0%,transparent 70%),radial-gradient(40% 50% at 10% 100%,rgba(255,31,45,.07),transparent 70%),linear-gradient(180deg,#0a1016,#05080c)}
 .stage{position:absolute;inset:0}
 .giant{position:absolute;z-index:1;font-family:var(--gi);font-weight:400;line-height:.8;white-space:nowrap;pointer-events:none;transform:translate3d(calc(var(--mx,0)*-14px),calc(var(--my,0)*-8px),0);transition:transform .6s var(--ease)}
@@ -142,11 +143,10 @@ h1,h2,h3{margin:0;font-weight:700;line-height:1.08;text-wrap:balance}
 .in .card:hover{transform:translateY(-8px);transition-delay:0s}
 
 /* cases */
-#cases{height:600vh;scroll-snap-align:none;overflow:clip}
-.snapc{position:absolute;left:0;width:1px;height:100vh;scroll-snap-align:start}
-.c-sticky{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
-.track{display:flex;height:100%;will-change:transform}
-.slide{--ac:#1e9bff;flex:none;width:100vw;height:100%;position:relative;padding:max(11vh,92px) 4vw 7vh;display:grid;grid-template-columns:minmax(0,2.2fr) minmax(0,1fr);gap:2.4vw;isolation:isolate}
+#cases{overflow:hidden}
+.c-sticky{position:relative;height:100%;overflow:hidden}
+.track{display:flex;height:100%;will-change:transform;transition:transform 1s cubic-bezier(.77,0,.18,1)}
+.slide{--ac:#1e9bff;flex:none;width:100vw;height:100%;position:relative;padding:max(11vh,92px) 4vw 7vh;display:grid;grid-template-columns:minmax(0,2.2fr) minmax(0,1fr);gap:2.4vw;isolation:isolate;overflow-y:auto;scrollbar-width:none}
 .slide .bgfx{background:radial-gradient(45% 60% at 88% 45%,color-mix(in srgb,var(--ac) 18%,transparent),transparent 70%),linear-gradient(180deg,#0a1016,#05080c)}
 .s-main,.s-side{position:relative;z-index:3}.s-main{display:grid;grid-template-rows:auto minmax(0,1fr) minmax(0,1.35fr);gap:2.2vh}
 .s-head h2{font-size:clamp(32px,3.6vw,60px);font-weight:800;margin-top:.6vh}
@@ -204,7 +204,7 @@ h1,h2,h3{margin:0;font-weight:700;line-height:1.08;text-wrap:balance}
 .c-arr svg{width:16px;height:16px}
 .c-arr:disabled{opacity:.3;pointer-events:none}
 
-.foot{scroll-snap-align:end;padding:48px 4.4vw;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:24px;align-items:center;justify-content:space-between;color:#c9ced5;font-size:15px;background:#05080c}
+.foot{padding:48px 4.4vw;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:24px;align-items:center;justify-content:space-between;color:#c9ced5;font-size:15px;background:#05080c}
 .foot .btn{color:#fff}
 
 /* modal */
@@ -228,42 +228,40 @@ h1,h2,h3{margin:0;font-weight:700;line-height:1.08;text-wrap:balance}
   .burger{display:block}
   .hdr{padding:14px 5vw}
   .logo svg{width:50px;height:36px}.logo b{font-size:16px}.logo span{font-size:13px}
-  .sec{height:auto;min-height:0;overflow:hidden}
-  #hero{height:100svh;min-height:600px}
   .h-lead{left:5vw;right:5vw;bottom:calc(9vh + 64px);max-width:none}
   .h-lead h1{font-size:clamp(22px,6.4vw,30px)}
   .h-cta{left:5vw;right:5vw;bottom:4vh;gap:18px}
   .h-cta .btn{height:50px;padding:0 22px}
   #hero::after{content:"";position:absolute;inset:auto 0 0;height:45%;z-index:4;background:linear-gradient(180deg,transparent,rgba(5,8,12,.92) 70%)}
-  .flow{display:flex;flex-direction:column;padding:96px 5vw 48px}
+  .flow{display:flex;flex-direction:column;padding:84px 5vw 0}
   .flow .ui,.flow .side{position:static;max-width:none}
-  .flow .stage{position:relative;inset:auto;margin:6px -5vw 0}
-  #team .stage{height:min(100vw,600px)}
+  .flow .stage{position:relative;inset:auto;margin:8px -5vw 0;flex:1 0 220px}
   .slide .orbit,#pricing>.orbit{display:none}
   .s-img img{object-fit:contain;-webkit-mask-image:radial-gradient(ellipse 70% 70% at 50% 50%,#000 45%,transparent 75%);mask-image:radial-gradient(ellipse 70% 70% at 50% 50%,#000 45%,transparent 75%)}
-  #book .stage{height:min(100vw,600px)}
-  .side h2{font-size:clamp(32px,9vw,46px);margin:18px 0 14px}
-  .side p{font-size:16px;margin-bottom:20px}
-  .book-btns{margin-top:22px}
+  .side h2{font-size:clamp(28px,8vw,42px);margin:12px 0 10px}
+  .side p{font-size:15px;margin-bottom:12px}
+  .side .play i{width:44px;height:44px}
+  .book-btns{margin-top:14px}
+  .book-btns .btn{height:48px}
   .book-btns .btn{flex:1;justify-content:center;padding:0 18px}
-  .p-in{position:static;padding:96px 0 48px}
-  .p-head{flex-direction:column;align-items:flex-start;gap:14px;margin-bottom:34px;padding:0 5vw}
-  .p-head h2{font-size:clamp(30px,8.4vw,44px)}
-  .p-head p{padding-left:16px;font-size:16px}
+  .p-in{position:static;padding:80px 0 16px}
+  .p-head{flex-direction:column;align-items:flex-start;gap:8px;margin-bottom:14px;padding:0 5vw}
+  .p-head h2{font-size:clamp(26px,7.4vw,40px);margin-top:8px}
+  .p-head p{padding-left:14px;font-size:14px}
   .cards{display:grid;grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:min(84vw,360px);gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding:18px 5vw 8px;scroll-padding:0 5vw;scrollbar-width:none}
   .cards::-webkit-scrollbar,.track::-webkit-scrollbar{display:none}
-  .card{scroll-snap-align:start;padding:26px 22px}
-  .feat{font-size:15px;gap:11px}
-  .card .btn{height:52px;margin-top:22px}
-  .price{margin:18px 0 16px;padding-bottom:16px}
+  .card{scroll-snap-align:start;padding:20px 18px}
+  .card h3{font-size:24px}
+  .feat{font-size:13.5px;gap:7px}
+  .card .btn{height:48px;margin-top:16px}
+  .price{margin:12px 0 12px;padding-bottom:12px;font-size:30px}
+  .dots{margin-top:10px!important}
   .dots{display:flex;justify-content:center;gap:8px;margin-top:16px}
   .dots i{width:8px;height:8px;border-radius:9px;background:rgba(255,255,255,.3);transition:.3s}
   .dots i.on{width:24px;background:var(--red)}
-  #cases{height:auto}
-  .snapc{display:none}
-  .c-sticky{position:relative;height:auto;padding-top:84px}
-  .track{overflow-x:auto;scroll-snap-type:x mandatory;transform:none!important;scrollbar-width:none;align-items:flex-start}
-  .slide{scroll-snap-align:start;height:auto;display:flex;flex-direction:column;padding:12px 5vw 90px;gap:16px}
+  .slide{height:100%;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none;display:flex;flex-direction:column;padding:84px 5vw 96px;gap:16px}
+  .slide>*{flex:none}
+  .c-ui{background:linear-gradient(transparent,rgba(5,8,12,.95) 40%);padding:30px 5vw 0;left:0;right:0;bottom:0;padding-bottom:18px}
   .s-main,.s-side{display:contents}
   .s-head{order:1}.s-side .lead{order:2;font-size:16px;padding-left:14px}
   .s-img{order:3;height:62vw;max-height:340px;margin:0 -5vw}
@@ -277,7 +275,6 @@ h1,h2,h3{margin:0;font-weight:700;line-height:1.08;text-wrap:balance}
   .trust h3{font-size:22px}.trust p{font-size:15px}
   .about h3{font-size:28px}.about p{font-size:16px}
   .fig text{font-size:12px}.fig .mo{font-size:11px}
-  .c-ui{bottom:22px;left:5vw;right:5vw}
 }
 @media(min-width:901px){.dots{display:none}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important;animation:none!important;transition-delay:0s!important}html{scroll-behavior:auto}}
@@ -310,7 +307,7 @@ h1,h2,h3{margin:0;font-weight:700;line-height:1.08;text-wrap:balance}
   <a href="#hero"><span>01</span></a><a href="#team"><span>02</span></a><a href="#book"><span>03</span></a><a href="#pricing"><span>04</span></a><a href="#cases"><span>05</span></a>
 </nav>
 
-<main>
+<div id="fp"><main>
 <!-- 01 HERO — текст FRIDMAN лежит ЗА фото; чтобы сменить фото, замените img/hero.webp -->
 <section class="sec" id="hero" data-par>
   <div class="bgfx"></div>
@@ -342,7 +339,7 @@ h1,h2,h3{margin:0;font-weight:700;line-height:1.08;text-wrap:balance}
   <div class="stage">
     <div class="giant" data-box="33,10,54,38" data-mbox="6,4,88,40"><span class="gw">Team</span></div>
     <svg class="orbit back" data-orbit="900,520,980,150,-14"></svg>
-    <div class="photo" style="left:62%;bottom:0;height:80%;max-width:66vw;aspect-ratio:2820/1502" data-m="left:50%;height:auto;width:112%;max-width:none"><img src="img/team.webp" alt="Команда Fridman Marketing"></div>
+    <div class="photo" style="left:62%;bottom:0;height:80%;max-width:66vw;aspect-ratio:2820/1502" data-m="left:50%;height:min(82%,62vw);max-width:none"><img src="img/team.webp" alt="Команда Fridman Marketing"></div>
     <svg class="orbit front" data-orbit="900,520,980,150,-14" data-front></svg>
   </div>
 </section>
@@ -363,7 +360,7 @@ h1,h2,h3{margin:0;font-weight:700;line-height:1.08;text-wrap:balance}
   <div class="stage">
     <div class="giant" data-box="31.7,11.7,58,52.6" data-mbox="5,4,90,46"><span class="gw">Book</span></div>
     <svg class="orbit back" data-orbit="1000,520,760,120,-9"></svg>
-    <div class="photo" style="left:61.6%;top:22.3%;height:64.3%;aspect-ratio:1500/1210" data-m="left:56%;top:22%;height:78%"><img src="img/book.webp" alt="Книга «SEO: Органическая драма»"></div>
+    <div class="photo" style="left:61.6%;top:22.3%;height:64.3%;aspect-ratio:1500/1210" data-m="left:56%;top:auto;bottom:3%;height:80%"><img src="img/book.webp" alt="Книга «SEO: Органическая драма»"></div>
     <svg class="orbit front" data-orbit="1000,520,760,120,-9" data-front></svg>
   </div>
   <div class="ui vscale" data-r style="--d:1">01<div class="vline"></div></div>
@@ -401,7 +398,7 @@ h1,h2,h3{margin:0;font-weight:700;line-height:1.08;text-wrap:balance}
 <footer class="foot" id="contacts">
   <div><b style="color:#fff">FRIDMAN MARKETING</b> · Krasnodar, Worldwide · 2026 ©</div>
   <button class="btn red" data-open>Обсудить проект <svg><use href="#arr"/></svg></button>
-</footer>
+</footer></div>
 
 <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mt">
   <form class="mbox" id="form">
@@ -457,7 +454,7 @@ const CASES=[
 
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const mq=matchMedia('(max-width:900px)');
+const mq=matchMedia('(max-width:900px)');const modal=$('#modal');
 const fmt=n=>n.toLocaleString('ru-RU').replace(/ /g,' ');
 const ARR='<svg><use href="#arr"/></svg>';
 
@@ -492,7 +489,6 @@ $('#track').innerHTML=CASES.map((c,i)=>`<article class="slide" style="--ac:${c.a
   <div class="about"><h3>О проекте</h3><p>${esc(c.ab)}</p></div>
  </div></article>`).join('');
 const N=CASES.length,cs=$('#cases');
-for(let i=0;i<N;i++){const d=document.createElement('div');d.className='snapc';d.style.top=(i*100)+'vh';cs.prepend(d)}
 
 /* графики */
 function drawChart(fig){
@@ -542,56 +538,75 @@ function fit(){
 }
 document.fonts.ready.then(fit);fit();addEventListener('resize',fit);
 
-/* появление блоков, пейджер, навигация */
-const secs=$$('main .sec'),pag=$$('#pager a');
-const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');countIn(e.target);
- const k=secs.indexOf(e.target);pag.forEach((a,j)=>a.classList.toggle('on',j==k));
- $$('#nav a').forEach(a=>a.classList.toggle('on',a.getAttribute('href')=='#'+e.target.id))}}),{threshold:.35});
-secs.forEach(s=>io.observe(s));
-const ioCases=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){cs.classList.add('in');pag.forEach((a,j)=>a.classList.toggle('on',j==4))}}),{threshold:0,rootMargin:'-45% 0px -45% 0px'});
-ioCases.observe(cs);
-
+/* ===== постраничная прокрутка: один свайп / колесо = один блок ===== */
+const fp=$('#fp'),pag=$$('#pager a'),track=$('#track'),slides=$$('.slide'),body=document.body;
+const STOPS=[{el:$('#hero')},{el:$('#team')},{el:$('#book')},{el:$('#pricing')},...CASES.map((_,k)=>({el:cs,k})),{el:$('#contacts')}];
+const IDX={hero:0,team:1,book:2,pricing:3,cases:4,contacts:STOPS.length-1};
+let S=0,cur=-1,lockUntil=0,lastWheel=0,lastAbs=0;
 function countIn(root){root.querySelectorAll('[data-count]:not(.done)').forEach(el=>{
  el.classList.add('done');const to=+el.dataset.count,t0=performance.now(),dur=1400;
  if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;
  const tick=t=>{const k=Math.min(1,(t-t0)/dur),e=1-(1-k)**3;el.textContent=fmt(Math.round(to*e));if(k<1)requestAnimationFrame(tick)};requestAnimationFrame(tick)})}
+function setActive(k){cur=k;slides[k].classList.add('on');countIn(slides[k]);
+ $('#ccount').textContent=String(k+1).padStart(2,'0')+' / '+String(N).padStart(2,'0');
+ $('#cbar').style.setProperty('--p',(k+1)/N);$('#cprev').disabled=k==0;$('#cnext').disabled=k==N-1}
+const scroller=()=>{const s=STOPS[S];return s.k!=null?slides[s.k]:s.el};
+const canScroll=(el,d)=>d>0?el.scrollTop+el.clientHeight<el.scrollHeight-2:el.scrollTop>2;
+function apply(instant){
+ const s=STOPS[S],el=s.el,y=Math.min(el.offsetTop,fp.scrollHeight-innerHeight);
+ if(instant){fp.style.transition=track.style.transition='none';requestAnimationFrame(()=>requestAnimationFrame(()=>{fp.style.transition=track.style.transition=''}))}
+ fp.style.transform=`translate3d(0,${-y}px,0)`;
+ el.classList.add('in');countIn(el);
+ if(s.k!=null){track.style.transform=`translate3d(${-s.k*100}vw,0,0)`;setActive(s.k)}
+ const p=Math.min(S,4);pag.forEach((a,j)=>a.classList.toggle('on',j==p));
+ const id=S>=4&&S<4+N?'cases':el.id;$$('#nav a').forEach(a=>a.classList.toggle('on',a.getAttribute('href')=='#'+id));
+ $('#hdr').classList.toggle('solid',S>0);
+}
+function go(n){n=Math.max(0,Math.min(STOPS.length-1,n));if(n==S)return;const d=n>S?1:-1;S=n;
+ const sc=scroller();sc.scrollTop=d>0?0:sc.scrollHeight;apply();lockUntil=performance.now()+1000}
+const busy=()=>modal.classList.contains('open')||body.classList.contains('menu-open');
+addEventListener('wheel',e=>{if(busy())return;
+ if(Math.abs(e.deltaX)>Math.abs(e.deltaY))return;
+ const d=Math.sign(e.deltaY);if(!d)return;
+ if(canScroll(scroller(),d))return;
+ e.preventDefault();const now=performance.now(),a=Math.abs(e.deltaY);
+ const fresh=now-lastWheel>160||a>lastAbs+20;lastWheel=now;lastAbs=a;
+ if(now<lockUntil||!fresh||a<4)return;go(S+d)},{passive:false});
+let tx=0,ty=0,eDown=false,eUp=false,inCards=false;
+addEventListener('touchstart',e=>{if(busy())return;const t=e.touches[0];tx=t.clientX;ty=t.clientY;const sc=scroller();
+ eDown=!canScroll(sc,1);eUp=!canScroll(sc,-1);inCards=!!e.target.closest('.cards')},{passive:true});
+addEventListener('touchmove',e=>{if(busy())return;const t=e.touches[0],dx=tx-t.clientX,dy=ty-t.clientY;
+ if(Math.abs(dy)>Math.abs(dx)?((dy>0&&eDown)||(dy<0&&eUp)):(STOPS[S].k!=null))e.cancelable&&e.preventDefault()},{passive:false});
+addEventListener('touchend',e=>{if(busy())return;const t=e.changedTouches[0],dx=tx-t.clientX,dy=ty-t.clientY;
+ if(performance.now()<lockUntil-300)return;
+ if(Math.abs(dy)>45&&Math.abs(dy)>Math.abs(dx)){if(dy>0&&eDown)go(S+1);else if(dy<0&&eUp)go(S-1)}
+ else if(!inCards&&STOPS[S].k!=null&&Math.abs(dx)>45&&Math.abs(dx)>Math.abs(dy)){const k=STOPS[S].k+(dx>0?1:-1);if(k>=0&&k<N)go(4+k)}},{passive:true});
+addEventListener('keydown',e=>{if(busy()||/INPUT|SELECT|TEXTAREA/.test(e.target.tagName))return;
+ const sc=scroller(),k=e.key;
+ if(['ArrowDown','PageDown',' '].includes(k)){if(canScroll(sc,1)&&k!='PageDown')return;e.preventDefault();go(S+1)}
+ else if(['ArrowUp','PageUp'].includes(k)){if(canScroll(sc,-1)&&k!='PageUp')return;e.preventDefault();go(S-1)}
+ else if(k=='Home'){e.preventDefault();go(0)}else if(k=='End'){e.preventDefault();go(STOPS.length-1)}
+ else if(STOPS[S].k!=null&&k=='ArrowRight'){e.preventDefault();go(S+1)}
+ else if(STOPS[S].k!=null&&k=='ArrowLeft'){e.preventDefault();go(S-1)}});
+document.addEventListener('click',e=>{const a=e.target.closest('a[href^="#"]');if(!a)return;const id=a.getAttribute('href').slice(1);
+ if(id in IDX){e.preventDefault();body.classList.remove('menu-open');go(IDX[id])}});
+$('#cprev').onclick=()=>{if(cur>0)go(4+cur-1)};$('#cnext').onclick=()=>{if(cur<N-1)go(4+cur+1)};
+addEventListener('resize',()=>apply(true));
+mq.addEventListener('change',()=>{fit();apply(true)});
+addEventListener('scroll',()=>{if(scrollY)scrollTo(0,0)});
+apply(true);setActive(0);
 
 /* параллакс мышью */
 if(matchMedia('(pointer:fine)').matches)$$('[data-par]').forEach(s=>s.addEventListener('pointermove',e=>{
  const r=s.getBoundingClientRect();s.style.setProperty('--mx',((e.clientX-r.left)/r.width-.5)*2);s.style.setProperty('--my',((e.clientY-r.top)/r.height-.5)*2)}));
 
-/* горизонтальная галерея */
-const track=$('#track'),slides=$$('.slide');let cur=-1;
-function setActive(k){if(k==cur)return;cur=k;slides.forEach((s,j)=>{if(j==k){s.classList.add('on');countIn(s)}});
- $('#ccount').textContent=String(k+1).padStart(2,'0')+' / '+String(N).padStart(2,'0');
- $('#cprev').disabled=k==0;$('#cnext').disabled=k==N-1}
-function onScroll(){
- $('#hdr').classList.toggle('solid',scrollY>40);
- if(mq.matches)return;
- const r=cs.getBoundingClientRect(),vh=innerHeight,p=Math.min(1,Math.max(0,-r.top/(r.height-vh)));
- track.style.transform=`translate3d(${-p*(N-1)*innerWidth}px,0,0)`;
- $('#cbar').style.setProperty('--p',(p*(N-1)+1)/N);
- if(r.top<vh*.5&&r.bottom>vh*.5)setActive(Math.round(p*(N-1)));
-}
-addEventListener('scroll',onScroll,{passive:true});onScroll();
-track.addEventListener('scroll',()=>{if(!mq.matches)return;const k=Math.round(track.scrollLeft/track.clientWidth);$('#cbar').style.setProperty('--p',(k+1)/N);setActive(k)},{passive:true});
-function go(k){k=Math.max(0,Math.min(N-1,k));
- if(mq.matches)track.scrollTo({left:k*track.clientWidth,behavior:'smooth'});
- else scrollTo({top:cs.offsetTop+k*innerHeight,behavior:'smooth'})}
-$('#cprev').onclick=()=>go(cur-1);$('#cnext').onclick=()=>go(cur+1);
-addEventListener('keydown',e=>{const r=cs.getBoundingClientRect();if(r.top>innerHeight*.5||r.bottom<innerHeight*.5)return;
- if(e.key=='ArrowRight'){e.preventDefault();go(cur+1)}if(e.key=='ArrowLeft'){e.preventDefault();go(cur-1)}});
-mq.addEventListener('change',()=>{track.style.transform='';cur=-1;fit();onScroll();if(mq.matches)setActive(0)});
-if(mq.matches)setActive(0);
-setTimeout(()=>{if(cur<0)setActive(0)},50);
 
 /* меню */
-const body=document.body;
 $('#burger').onclick=()=>body.classList.toggle('menu-open');
 $$('#mnav a').forEach(a=>a.addEventListener('click',()=>body.classList.remove('menu-open')));
 
 /* модальное окно заявки */
-const modal=$('#modal');
+
 document.addEventListener('click',e=>{const o=e.target.closest('[data-open]');if(o){body.classList.remove('menu-open');modal.classList.add('open');
  if(o.dataset.plan)$('#f-plan').value=o.dataset.plan;$('#fnote').textContent='';setTimeout(()=>$('#f-name').focus(),300)}
  if(e.target.closest('[data-close]')||e.target==modal)modal.classList.remove('open')});
