@@ -36,6 +36,7 @@ img{display:block;max-width:none}
 .btn svg{width:14px;height:14px;transition:transform .3s var(--ease)}
 .btn:hover svg{transform:translate(3px,-3px)}
 .btn:hover{border-color:#fff;background:rgba(255,255,255,.06)}
+.btn.ghost{border-color:rgba(255,255,255,.55)}
 .btn.red{background:var(--red);border-color:var(--red);box-shadow:0 10px 40px -10px rgba(255,31,45,.7)}
 .btn.red:hover{background:#ff3845;transform:translateY(-2px)}
 .btn::before{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.35) 50%,transparent 70%);transform:translateX(-120%);transition:transform .8s}
@@ -69,8 +70,8 @@ img{display:block;max-width:none}
 .bgfx{position:absolute;inset:0;z-index:-2;background:radial-gradient(60% 55% at 55% 35%,#16212c 0%,transparent 70%),radial-gradient(40% 50% at 10% 100%,rgba(255,31,45,.07),transparent 70%),linear-gradient(180deg,#0a1016,#05080c)}
 .stage{position:absolute;inset:0}
 .giant{position:absolute;z-index:1;font-family:var(--gi);font-weight:400;line-height:.8;white-space:nowrap;pointer-events:none;transform:translate3d(calc(var(--mx,0)*-14px),calc(var(--my,0)*-8px),0);transition:transform .6s var(--ease)}
-.gw{display:inline-block;transform:scaleY(var(--sy,1));transform-origin:0 0;text-transform:uppercase}
-.gw i{display:inline-block;font-style:normal;background:linear-gradient(180deg,#fff 55%,#cfd4da);-webkit-background-clip:text;background-clip:text;color:transparent;opacity:0;transform:translateY(30%);transition:opacity .9s var(--ease),transform 1.1s var(--ease);transition-delay:calc(var(--i)*70ms + .1s)}
+.gw{-webkit-mask-image:linear-gradient(#000 55%,rgba(0,0,0,.8));mask-image:linear-gradient(#000 55%,rgba(0,0,0,.8));display:inline-block;transform:scaleY(var(--sy,1));transform-origin:0 0;text-transform:uppercase}
+.gw i{display:inline-block;font-style:normal;color:#f4f5f7;opacity:0;transform:translateY(30%);transition:opacity .9s var(--ease),transform 1.1s var(--ease);transition-delay:calc(var(--i)*70ms + .1s)}
 .in .gw i{opacity:1;transform:none}
 .photo{position:absolute;z-index:3;transform:translateX(-50%)}
 .photo.fade img{-webkit-mask-image:linear-gradient(#000 78%,rgba(0,0,0,.25));mask-image:linear-gradient(#000 78%,rgba(0,0,0,.25))}
@@ -148,7 +149,11 @@ h1,h2,h3{margin:0;font-weight:700;line-height:1.08;text-wrap:balance}
 #cases{overflow:hidden}
 .c-sticky{position:relative;height:100%;overflow:hidden}
 .track{display:flex;height:100%;will-change:transform;transition:transform 1.15s cubic-bezier(.65,0,.25,1)}
-.slide{transition:opacity 1s ease,transform 1.15s cubic-bezier(.65,0,.25,1)}.slide:not(.now){opacity:.3;transform:scale(.94)}
+.slide{transition:opacity .9s ease}.slide:not(.now){opacity:0}
+.slide [data-a]{opacity:0;transform:translateY(40px);transition:opacity .8s var(--ease),transform 1s var(--ease);transition-delay:0s}
+.slide [data-a=l]{transform:translateX(-50px)}.slide [data-a=r]{transform:translateX(60px)}
+.slide.now [data-a]{opacity:1;transform:none;transition-delay:calc(var(--d,0)*1s + .35s)}
+.slide .s-head h2{clip-path:inset(0 100% 0 0);transition:clip-path 1.1s var(--ease)}.slide.now .s-head h2{clip-path:inset(0 0 0 0);transition-delay:.3s}
 .slide{--ac:#1e9bff;flex:none;width:100vw;height:100%;position:relative;padding:max(11vh,92px) 4vw 7vh;display:grid;grid-template-columns:minmax(0,2.2fr) minmax(0,1fr);gap:2.4vw;isolation:isolate;overflow-y:auto;scrollbar-width:none}
 .slide .bgfx{background:radial-gradient(45% 60% at 88% 45%,color-mix(in srgb,var(--ac) 18%,transparent),transparent 70%),linear-gradient(180deg,#0a1016,#05080c)}
 .s-main,.s-side{position:relative;z-index:3}.s-main{display:grid;grid-template-rows:auto minmax(0,1fr) minmax(0,1.35fr);gap:2.2vh}
@@ -167,7 +172,7 @@ h1,h2,h3{margin:0;font-weight:700;line-height:1.08;text-wrap:balance}
 .fig .ar{opacity:0;transition:opacity 1.2s .8s}
 .fig .l{fill:none;stroke:var(--ac);stroke-width:3;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 1.8s var(--ease) .2s;filter:drop-shadow(0 0 6px var(--ac))}
 .fig .pt,.fig .vl{opacity:0;transition:opacity .5s;transition-delay:calc(var(--i)*.15s + .4s)}
-.on .fig .l{stroke-dashoffset:0}.on .fig .ar,.on .fig .pt,.on .fig .vl{opacity:1}
+.now .fig .l{stroke-dashoffset:0}.now .fig .ar,.now .fig .pt,.now .fig .vl{opacity:1}
 .fig text{fill:#fff;font:700 15px var(--hd)}
 .fig .vl{fill:color-mix(in srgb,var(--ac) 35%,#fff)}
 .fig .mo{fill:#e6e9ee;font-weight:500;font-size:14px}
@@ -182,7 +187,7 @@ h1,h2,h3{margin:0;font-weight:700;line-height:1.08;text-wrap:balance}
 .q.dense td{padding-block:.28vh}.q.dense{font-size:min(1.45vh,14px)}
 .q td sup{color:#4dff7c;font-size:.75em;font-weight:700;margin-left:2px}
 .q tr{opacity:0;transform:translateX(-12px);transition:.5s var(--ease);transition-delay:calc(var(--i)*.05s + .3s)}
-.on .q tr{opacity:1;transform:none}
+.now .q tr{opacity:1;transform:none}
 .trust{padding:2vh 1.6vw;display:flex;flex-direction:column}
 .trust h3{font-size:clamp(20px,1.95vw,32px);font-weight:800}
 .trust h3 em{font-style:normal;color:var(--ac)}
@@ -194,8 +199,8 @@ h1,h2,h3{margin:0;font-weight:700;line-height:1.08;text-wrap:balance}
 .s-side{display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:2vh}
 .s-side .lead{margin:0;padding-left:2vw;border-left:1.5px solid var(--line);font-size:clamp(15px,1.2vw,20px);line-height:1.4;color:#e6e9ee;margin-top:1vh}
 .s-img{position:relative;margin-right:-4vw}
-.s-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;-webkit-mask-image:radial-gradient(ellipse 62% 62% at 55% 50%,#000 30%,transparent 72%);mask-image:radial-gradient(ellipse 62% 62% at 55% 50%,#000 30%,transparent 72%);transform:scale(1.08) translateX(40px);opacity:0;transition:transform 1.6s var(--ease),opacity 1.2s}
-.on .s-img img{transform:none;opacity:1}
+.s-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;object-position:70% 50%;-webkit-mask-image:linear-gradient(90deg,transparent,#000 32%),linear-gradient(180deg,transparent,#000 14%,#000 78%,transparent);-webkit-mask-composite:source-in;mask-image:linear-gradient(90deg,transparent,#000 32%),linear-gradient(180deg,transparent,#000 14%,#000 78%,transparent);mask-composite:intersect;transform:scale(1.12) translateX(60px);opacity:0;transition:transform 1.8s var(--ease) .15s,opacity 1.3s .15s}
+.now .s-img img{transform:none;opacity:1}
 .about h3{font-size:clamp(26px,2.4vw,40px);font-weight:800;margin-bottom:1.4vh}
 .about p{margin:0;font-size:clamp(14px,1.25vw,20px);line-height:1.4;color:#e6e9ee}
 .c-ui{position:absolute;z-index:6;left:4vw;right:4vw;bottom:2.4vh;display:flex;align-items:center;gap:20px;pointer-events:none}
@@ -261,16 +266,16 @@ h1,h2,h3{margin:0;font-weight:700;line-height:1.08;text-wrap:balance}
   .h-lead h1{font-size:clamp(22px,6.4vw,30px)}
   .h-cta{left:5vw;right:5vw;bottom:4vh;gap:18px}
   .h-cta .btn{height:50px;padding:0 20px;font-size:15px}
-  .h-cta{gap:14px}.h-cta .play{font-size:15px;gap:10px}.h-cta .play i{width:46px;height:46px}
+  .h-cta{gap:10px}.h-cta .btn{flex:1 1 0;justify-content:center;padding:0 12px}
   #hero::after{content:"";position:absolute;inset:auto 0 0;height:45%;z-index:4;background:linear-gradient(180deg,transparent,rgba(5,8,12,.92) 70%)}
   .flow{display:flex;flex-direction:column;padding:84px 5vw 0}
   .flow .ui,.flow .side{position:static;max-width:none}
   .flow .stage{position:relative;inset:auto;margin:8px -5vw 0;flex:1 0 220px}
   .slide .orbit,#pricing>.orbit{display:none}
-  .s-img img{object-fit:contain;-webkit-mask-image:radial-gradient(ellipse 70% 70% at 50% 50%,#000 45%,transparent 75%);mask-image:radial-gradient(ellipse 70% 70% at 50% 50%,#000 45%,transparent 75%)}
+  .s-img img{object-position:50% 50%;-webkit-mask-image:linear-gradient(90deg,transparent,#000 18%,#000 82%,transparent),linear-gradient(180deg,transparent,#000 12%,#000 80%,transparent);mask-image:linear-gradient(90deg,transparent,#000 18%,#000 82%,transparent),linear-gradient(180deg,transparent,#000 12%,#000 80%,transparent)}
   .side h2{font-size:clamp(28px,8vw,42px);margin:12px 0 10px}
   .side p{font-size:15px;margin-bottom:12px}
-  .side .play i{width:44px;height:44px}
+  .side .btn.ghost{height:46px}
   .book-btns{margin-top:14px}
   .book-btns .btn{height:48px}
   .book-btns .btn{flex:1;justify-content:center;padding:0 18px}
@@ -389,13 +394,13 @@ h1,h2,h3{margin:0;font-weight:700;line-height:1.08;text-wrap:balance}
   <div class="bgfx"></div>
   <div class="stage">
     <div class="giant" data-box="12.3,17.5,77,50" data-mbox="5,13,90,20"><span class="gw">Fridman</span></div>
-    <div class="photo fade" style="left:50.8%;bottom:0;height:91.5%;aspect-ratio:2120/1722" data-m="left:52%;height:72%"><img src="img/hero.webp" alt="Марк Фридман, основатель Fridman Marketing"></div>
+    <div class="photo fade" style="left:50.8%;bottom:0;height:91.5%;max-width:47vw;aspect-ratio:2120/1722" data-m="left:52%;height:72%;max-width:none"><img src="img/hero.webp" alt="Марк Фридман, основатель Fridman Marketing"></div>
   </div>
   <div class="ui h-meta" data-r style="--d:.9">2026 ©<hr>Krasnodar,<br>Worldwide</div>
   <div class="ui h-lead"><h1 data-r style="--d:.7">Независимая digital-команда для роста трафика, заявок и бренда.</h1></div>
   <div class="ui h-cta" data-r style="--d:.9">
     <button class="btn red" data-open>Обсудить проект <svg><use href="#arr"/></svg></button>
-    <a class="play" href="#cases"><i><svg><use href="#tri"/></svg></i>Смотреть кейсы</a>
+    <a class="btn ghost" href="#cases">Смотреть кейсы <svg><use href="#arr"/></svg></a>
   </div>
   <div class="ui h-serv" data-r style="--d:1.1"><ul><li>SEO</li><li>Маркетинг</li><li>Дизайн</li><li>Разработка</li></ul><div class="vline"></div></div>
   <a class="ui mouse" href="#team" aria-label="Листать вниз"><span></span><svg viewBox="0 0 16 14"><path d="M2 2l6 5 6-5M2 7l6 5 6-5" fill="none" stroke="#fff" stroke-width="1.5"/></svg></a>
@@ -408,11 +413,11 @@ h1,h2,h3{margin:0;font-weight:700;line-height:1.08;text-wrap:balance}
     <div class="eyebrow" data-r>02 <span style="opacity:.5">/</span> <b>КОМАНДА</b></div>
     <h2 data-r style="--d:.15">Люди, которые делают результат<span class="dot">.</span></h2>
     <p data-r style="--d:.3">Стратеги, SEO-специалисты, маркетологи, дизайнеры и разработчики, которые работают на рост вашего бизнеса.</p>
-    <a class="play" href="#pricing" data-r style="--d:.45"><i><svg><use href="#tri"/></svg></i>О нашей команде</a>
+    <a class="btn ghost" href="#pricing" data-r style="--d:.45">О нашей команде <svg><use href="#arr"/></svg></a>
   </div>
   <div class="stage">
     <div class="giant" data-box="33,10,54,38" data-mbox="6,4,88,40"><span class="gw">Team</span></div>
-    <div class="photo" style="left:62%;bottom:0;height:80%;max-width:66vw;aspect-ratio:2820/1502" data-m="left:50%;height:min(82%,62vw);max-width:none"><img src="img/team.webp" alt="Команда Fridman Marketing"></div>
+    <div class="photo" style="left:62%;bottom:0;height:80%;max-width:66vw;aspect-ratio:2820/1502" data-m="left:50%;height:min(82%,60vw);max-width:none"><img src="img/team.webp" alt="Команда Fridman Marketing"></div>
   </div>
 </section>
 
@@ -423,7 +428,7 @@ h1,h2,h3{margin:0;font-weight:700;line-height:1.08;text-wrap:balance}
     <div class="eyebrow" data-r>03 <span style="opacity:.5">/</span> <b>КНИГА</b></div>
     <h2 data-r style="--d:.15">SEO: Органическая драма<span class="dot">.</span></h2>
     <p data-r style="--d:.3">Моя книга о реальном SEO — без мифов и «волшебных» схем. Практика, процессы и ошибки, которые работают на результат.</p>
-    <a class="play" href="#book" data-r style="--d:.45"><i><svg><use href="#tri"/></svg></i>Смотреть обзор</a>
+    <a class="btn ghost" href="#book" data-r style="--d:.45">Смотреть обзор <svg><use href="#arr"/></svg></a>
     <div class="book-btns" data-r style="--d:.6">
       <a class="btn red" href="https://www.litres.ru/search/?q=SEO%20%D0%9E%D1%80%D0%B3%D0%B0%D0%BD%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B0%D1%8F%20%D0%B4%D1%80%D0%B0%D0%BC%D0%B0">Купить книгу <svg><use href="#arr"/></svg></a>
       <a class="btn litres" href="https://www.litres.ru/search/?q=SEO%20%D0%9E%D1%80%D0%B3%D0%B0%D0%BD%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B0%D1%8F%20%D0%B4%D1%80%D0%B0%D0%BC%D0%B0"><b>Лит<em>рес</em></b> <svg><use href="#arr"/></svg></a>
@@ -431,7 +436,7 @@ h1,h2,h3{margin:0;font-weight:700;line-height:1.08;text-wrap:balance}
   </div>
   <div class="stage">
     <div class="giant" data-box="31.7,11.7,58,52.6" data-mbox="5,4,90,46"><span class="gw">Book</span></div>
-    <div class="photo" style="left:61.6%;top:22.3%;height:64.3%;aspect-ratio:1500/1210" data-m="left:56%;top:auto;bottom:3%;height:80%"><img src="img/book.webp" alt="Книга «SEO: Органическая драма»"></div>
+    <div class="photo" style="left:60.8%;top:auto;bottom:11%;height:66%;max-width:38vw;aspect-ratio:2096/1669" data-m="left:52%;top:auto;bottom:4%;height:74%;max-width:86vw"><img src="img/book.webp" alt="Книга «SEO: Органическая драма»"></div>
   </div>
   <div class="ui vscale" data-r style="--d:1">01<div class="vline"></div></div>
 </section>
@@ -457,8 +462,6 @@ h1,h2,h3{margin:0;font-weight:700;line-height:1.08;text-wrap:balance}
     <div class="c-ui">
       <span class="c-count" id="ccount">01 / 06</span>
       <div class="c-bar"><i id="cbar"></i></div>
-      <button class="c-arr" id="cprev" aria-label="Предыдущий кейс"><svg viewBox="0 0 16 16"><path d="M10 3 5 8l5 5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button>
-      <button class="c-arr" id="cnext" aria-label="Следующий кейс"><svg viewBox="0 0 16 16"><path d="M6 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button>
     </div>
   </div>
 </section>
@@ -564,20 +567,20 @@ const cell=c=>Array.isArray(c)?`${c[0]}${c[1]?`<sup>+${c[1]}</sup>`:''}`:esc(c);
 $('#track').innerHTML=CASES.map((c,i)=>`<article class="slide" style="--ac:${c.ac}" data-i="${i}">
  <div class="bgfx"></div>
  <div class="s-main">
-  <div class="s-head"><div class="eyebrow">05 <span style="opacity:.5">/</span> <b>КЕЙСЫ</b></div><h2>${esc(c.t)}<span class="d">.</span></h2></div>
-  <div class="box chart"><div class="chart-top"><h3>Рост трафика ${c.g}% за год</h3><span class="src"><i></i>Яндекс Метрика</span></div>
+  <div class="s-head" data-a="l"><div class="eyebrow">05 <span style="opacity:.5">/</span> <b>КЕЙСЫ</b></div><h2>${esc(c.t)}<span class="d">.</span></h2></div>
+  <div class="box chart" data-a style="--d:.12"><div class="chart-top"><h3>Рост трафика ${c.g}% за год</h3><span class="src"><i></i>Яндекс Метрика</span></div>
    <div class="leg"><i></i>Количество переходов (шт.)</div><div class="fig" data-c="${i}"><svg></svg></div></div>
   <div class="s-bot">
-   <div class="box tbl"><table class="q${c.rows.length>9?' dense':''}"><thead><tr><th>ЗАПРОСЫ</th>${c.cols.map(m=>`<th>${m}</th>`).join('')}</tr></thead>
+   <div class="box tbl" data-a style="--d:.24"><table class="q${c.rows.length>9?' dense':''}"><thead><tr><th>ЗАПРОСЫ</th>${c.cols.map(m=>`<th>${m}</th>`).join('')}</tr></thead>
     <tbody>${c.rows.map((r,j)=>`<tr style="--i:${j}"><td>${esc(r[0])}</td><td>${cell(r[1])}</td><td>${cell(r[2])}</td><td>${cell(r[3])}</td></tr>`).join('')}</tbody></table></div>
-   <div class="box trust"><h3>${esc(c.tt)} <em>${c.tv}%</em></h3><p>${esc(c.tx)}</p>
+   <div class="box trust" data-a style="--d:.36"><h3>${esc(c.tt)} <em>${c.tv}%</em></h3><p>${esc(c.tx)}</p>
     <div class="stats"><div class="stat"><b>На <span data-count="${c.s1[0]}">${c.s1[0]}</span>%</b><em>${esc(c.s1[1])}</em></div><div class="stat"><b>На <span data-count="${c.s2[0]}">${c.s2[0]}</span>%</b><em>${esc(c.s2[1])}</em></div></div></div>
   </div>
  </div>
  <div class="s-side">
-  <p class="lead">Рост органического трафика, узнаваемости бренда и видимости в поиске.</p>
+  <p class="lead" data-a="r" style="--d:.1">Рост органического трафика, узнаваемости бренда и видимости в поиске.</p>
   <div class="s-img"><img src="${c.img}" alt="${esc(c.t)}"></div>
-  <div class="about"><h3>О проекте</h3><p>${esc(c.ab)}</p></div>
+  <div class="about" data-a="r" style="--d:.45"><h3>О проекте</h3><p>${esc(c.ab)}</p></div>
  </div></article>`).join('');
 const N=CASES.length,cs=$('#cases');
 
@@ -618,16 +621,18 @@ function fit(){
  $$('.giant').forEach(gt=>{
   const st=gt.parentElement,W=st.clientWidth,H=st.clientHeight,b=(m&&gt.dataset.mbox||gt.dataset.box).split(',').map(Number);
   const g=gt.firstElementChild;g.style.fontSize='100px';g.style.setProperty('--sy',1);
-  const w0=g.offsetWidth,h0=g.offsetHeight;const fs=100*(W*b[2]/100)/w0;
-  g.style.fontSize=fs+'px';const sy=Math.min(1.9,Math.max(1,(H*b[3]/100)/(h0*fs/100)));g.style.setProperty('--sy',sy);
-  gt.style.left=b[0]+'%';gt.style.top=(m?b[1]*H/100:Math.max(b[1]*H/100,$('#hdr').offsetHeight+6))+'px';
+  const w0=g.offsetWidth||1,h0=g.offsetHeight||1,tw=W*b[2]/100;
+  let top=m?b[1]*H/100:Math.max(b[1]*H/100,$('#hdr').offsetHeight+6);const th=Math.max(40,H*b[3]/100-(top-b[1]*H/100));
+  const fs=Math.min(100*tw/w0,100*th/h0);
+  g.style.fontSize=fs+'px';const sy=Math.min(1.9,Math.max(1,th/(h0*fs/100)));g.style.setProperty('--sy',sy);
+  gt.style.left=(W*b[0]/100+(tw-w0*fs/100)/2)+'px';gt.style.top=top+'px';
  });
  $$('.photo').forEach(p=>{
   if(!p.dataset.d)p.dataset.d=p.getAttribute('style');
   p.setAttribute('style',p.dataset.d+(m&&p.dataset.m?';'+p.dataset.m:''));
  });
 }
-document.fonts.ready.then(fit);fit();addEventListener('resize',fit);
+document.fonts&&document.fonts.ready.then(fit);fit();setTimeout(fit,600);addEventListener('resize',fit);
 
 /* ===== постраничная прокрутка: один свайп / колесо = один блок ===== */
 const fp=$('#fp'),pag=$$('#pager a'),track=$('#track'),slides=$$('.slide'),body=document.body;
@@ -640,7 +645,7 @@ function countIn(root){root.querySelectorAll('[data-count]:not(.done)').forEach(
  const tick=t=>{const k=Math.min(1,(t-t0)/dur),e=1-(1-k)**3;el.textContent=fmt(Math.round(to*e));if(k<1)requestAnimationFrame(tick)};requestAnimationFrame(tick)})}
 function setActive(k){cur=k;slides[k].classList.add('on');countIn(slides[k]);
  $('#ccount').textContent=String(k+1).padStart(2,'0')+' / '+String(N).padStart(2,'0');
- $('#cbar').style.setProperty('--p',(k+1)/N);$('#cprev').disabled=k==0;$('#cnext').disabled=k==N-1}
+ $('#cbar').style.setProperty('--p',(k+1)/N);}
 const scroller=()=>{const s=STOPS[S];return s.k!=null?slides[s.k]:s.el};
 const canScroll=(el,d)=>{const o=getComputedStyle(el).overflowY;if(o!='auto'&&o!='scroll')return false;return d>0?el.scrollTop+el.clientHeight<el.scrollHeight-2:el.scrollTop>2};
 function apply(instant){
@@ -668,23 +673,22 @@ let tx=0,ty=0,eDown=false,eUp=false,inCards=false;
 addEventListener('touchstart',e=>{if(busy())return;const t=e.touches[0];tx=t.clientX;ty=t.clientY;const sc=scroller();
  eDown=!canScroll(sc,1);eUp=!canScroll(sc,-1);inCards=!!e.target.closest('.cards')},{passive:true});
 addEventListener('touchmove',e=>{if(busy())return;const t=e.touches[0],dx=tx-t.clientX,dy=ty-t.clientY;
- if(Math.abs(dy)>Math.abs(dx)?((dy>0&&eDown)||(dy<0&&eUp)):(STOPS[S].k!=null))e.cancelable&&e.preventDefault()},{passive:false});
+ if(Math.abs(dy)>Math.abs(dx)?((dy>0&&eDown)||(dy<0&&eUp)):false)e.cancelable&&e.preventDefault()},{passive:false});
 addEventListener('touchend',e=>{if(busy())return;const t=e.changedTouches[0],dx=tx-t.clientX,dy=ty-t.clientY;
  if(performance.now()<lockUntil-300)return;
  if(Math.abs(dy)>45&&Math.abs(dy)>Math.abs(dx)){if(dy>0&&eDown)go(S+1);else if(dy<0&&eUp)go(S-1)}
- else if(!inCards&&STOPS[S].k!=null&&Math.abs(dx)>45&&Math.abs(dx)>Math.abs(dy)){const k=STOPS[S].k+(dx>0?1:-1);if(k>=0&&k<N)go(4+k)}},{passive:true});
+},{passive:true});
 addEventListener('keydown',e=>{if(busy()||/INPUT|SELECT|TEXTAREA/.test(e.target.tagName))return;
  const sc=scroller(),k=e.key;
  if(['ArrowDown','PageDown',' '].includes(k)){if(canScroll(sc,1)&&k!='PageDown')return;e.preventDefault();go(S+1)}
  else if(['ArrowUp','PageUp'].includes(k)){if(canScroll(sc,-1)&&k!='PageUp')return;e.preventDefault();go(S-1)}
  else if(k=='Home'){e.preventDefault();go(0)}else if(k=='End'){e.preventDefault();go(STOPS.length-1)}
- else if(STOPS[S].k!=null&&k=='ArrowRight'){e.preventDefault();go(S+1)}
- else if(STOPS[S].k!=null&&k=='ArrowLeft'){e.preventDefault();go(S-1)}});
+});
 document.addEventListener('click',e=>{const a=e.target.closest('a[href^="#"]');if(!a)return;const id=a.getAttribute('href').slice(1);
  if(id in IDX){e.preventDefault();body.classList.remove('menu-open');go(IDX[id])}});
-$('#cprev').onclick=()=>{if(cur>0)go(4+cur-1)};$('#cnext').onclick=()=>{if(cur<N-1)go(4+cur+1)};
+
 addEventListener('resize',()=>apply(true));
-mq.addEventListener('change',()=>{fit();apply(true)});
+const onMq=()=>{fit();apply(true)};mq.addEventListener?mq.addEventListener('change',onMq):mq.addListener(onMq);
 addEventListener('scroll',()=>{if(scrollY)scrollTo(0,0)});
 apply(true);setActive(0);
 
