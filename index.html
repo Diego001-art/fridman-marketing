@@ -75,7 +75,7 @@ img{display:block;max-width:none}
 .gw i{display:inline-block;font-style:normal;color:#f4f5f7;opacity:0;transform:translateY(30%);transition:opacity .9s var(--ease),transform 1.1s var(--ease);transition-delay:calc(var(--i)*70ms + .1s)}
 .in .gw i{opacity:1;transform:none}
 #hero .gw i{opacity:1;transform:none;transition:none}.noanim #fp>main>.sec,.noanim #fp>.foot{transition:none!important}#hero .giant{transform:none;transition:none}
-.photo{position:absolute;z-index:3;transform:translateX(-50%)}
+.photo{position:absolute;z-index:3;transform:translateX(-50%)}.photo.bk{transform:translateX(-70.7%)}
 .photo.fade img{-webkit-mask-image:linear-gradient(#000 78%,rgba(0,0,0,.25));mask-image:linear-gradient(#000 78%,rgba(0,0,0,.25))}
 .photo img{width:100%;height:100%;object-fit:contain;object-position:50% 100%;opacity:0;transform:translate3d(calc(var(--mx,0)*10px),40px,0) scale(1.04);transition:opacity 1.2s var(--ease) .25s,transform 1.4s var(--ease) .25s;filter:drop-shadow(0 30px 60px rgba(0,0,0,.5))}
 .in .photo img{opacity:1;transform:translate3d(calc(var(--mx,0)*10px),calc(var(--my,0)*6px),0)}
@@ -268,7 +268,7 @@ h1,h2,h3{margin:0;font-weight:700;line-height:1.08;text-wrap:balance}
   .giant{--l:var(--ml);--t:var(--mt);--w:var(--mw);--h:var(--mh);top:calc(var(--mt)*1%)}
   .hdr{padding:14px 5vw}
   .hdr .f-logo{font-size:17px}
-  .h-lead{left:5vw;right:5vw;bottom:calc(9vh + 64px);max-width:none}
+  .h-lead{left:5vw;right:5vw;bottom:calc(4vh + 66px);max-width:none}
   .h-lead h1{font-size:clamp(22px,6.4vw,30px)}
   .h-cta{left:5vw;right:5vw;bottom:4vh;gap:18px}
   .h-cta .btn{height:50px;padding:0 20px;font-size:15px}
@@ -401,7 +401,7 @@ h1,h2,h3{margin:0;font-weight:700;line-height:1.08;text-wrap:balance}
   <div class="bgfx"></div>
   <div class="stage">
     <div class="giant" style="--dl:12.3;--dt:17.5;--dw:77;--dh:50;--ml:5;--mt:13;--mw:90;--mh:20;--k:2.5" data-rel="0.0987,0.546,1.492,-0.003" data-k="2.5"><span class="gw">Fridman</span></div>
-    <div class="photo fade" style="left:50.8%;bottom:0;height:91.5%;max-width:63.4vw;aspect-ratio:2120/1722" data-m="left:52%;height:72%;max-width:none"><img src="img/hero.webp" alt="Марк Фридман, основатель Fridman Marketing"></div>
+    <div class="photo fade" style="left:50.8%;bottom:0;height:91.5%;max-width:63.4vw;aspect-ratio:2120/1722" data-m="left:50%;bottom:31%;height:55%;max-width:none"><img src="img/hero.webp" alt="Марк Фридман, основатель Fridman Marketing"></div>
   </div>
   <div class="ui h-meta" data-r style="--d:.9">2026 ©<hr>Krasnodar,<br>Worldwide</div>
   <div class="ui h-lead"><h1 data-r style="--d:.7">Независимая digital-команда для роста трафика, заявок и бренда.</h1></div>
@@ -442,8 +442,8 @@ h1,h2,h3{margin:0;font-weight:700;line-height:1.08;text-wrap:balance}
     </div>
   </div>
   <div class="stage">
-    <div class="giant" style="--dl:31.7;--dt:11.7;--dw:58;--dh:52.6;--ml:5;--mt:4;--mw:90;--mh:46;--k:1.47" data-rel="-0.165,0.818,1.603,-0.025" data-k="1.47"><span class="gw">Book</span></div>
-    <div class="photo" style="left:61.6%;top:auto;bottom:12%;height:64.3%;max-width:45vw;aspect-ratio:2096/1669" data-m="left:52%;top:auto;bottom:4%;height:74%;max-width:86vw"><img src="img/book.webp" alt="Книга «SEO: Органическая драма»"></div>
+    <div class="giant" style="--dl:31.7;--dt:11.7;--dw:58;--dh:52.6;--ml:5;--mt:4;--mw:90;--mh:46;--k:1.47" data-rel="-0.34,0.75,1.32,0" data-k="1.47"><span class="gw">Book</span></div>
+    <div class="photo bk" data-ax=".707" style="left:62%;top:auto;bottom:10%;height:60%;max-width:45vw;aspect-ratio:2096/1669" data-m="left:50%;top:auto;bottom:3%;height:66%;max-width:88vw"><img src="img/book.webp" alt="Книга «SEO: Органическая драма»"></div>
   </div>
   <div class="ui vscale" data-r style="--d:1">01<div class="vline"></div></div>
 </section>
@@ -634,14 +634,12 @@ function fit(){
  $$('.giant').forEach(gt=>{try{
   const st=gt.parentElement,SW=st.clientWidth,SH=st.clientHeight,ph=st.querySelector('.photo'),img=ph.querySelector('img'),g=gt.firstElementChild;
   const ar=img.naturalWidth&&img.naturalHeight?img.naturalWidth/img.naturalHeight:parseFloat((ph.dataset.d.match(/aspect-ratio:([\d.]+)\/([\d.]+)/)||[0,1,1]).slice(1).reduce((a,b)=>a/b));
-  if(m){gt.style.left=gt.style.top=gt.style.width='';g.style.fontSize='';g.style.setProperty('--sy',1);
-   const h0=g.offsetHeight,th=SH*(parseFloat(getComputedStyle(gt).getPropertyValue('--h'))||30)/100;if(h0>10)g.style.setProperty('--sy',Math.min(1.9,Math.max(1,th/h0)));return}
   if(SW<100||SH<100||!ph.offsetHeight)return;
   /* реальная картинка внутри блока фото (contain, по низу) */
-  const bw=ph.offsetWidth,bh=ph.offsetHeight,bx=ph.offsetLeft-bw/2,by=ph.offsetTop;
-  let w,h,x,y;if(bw/bh>ar){h=bh;w=h*ar;x=bx+(bw-w)/2;y=by}else{w=bw;h=w/ar;x=bx;y=by+bh-h}
+  const ax=parseFloat(ph.dataset.ax||.5),bw=ph.offsetWidth,bh=ph.offsetHeight,bx=ph.offsetLeft-bw*ax,by=ph.offsetTop;
+  let w,h,x,y;if(bw/bh>ar){h=bh;w=h*ar;x=bx+(bw-w)*ax;y=by}else{w=bw;h=w/ar;x=bx;y=by+bh-h}
   const [rt,rh,rw,rdx]=gt.dataset.rel.split(',').map(Number),k=+gt.dataset.k;
-  let W=rw*h,Ht=rh*h,top=y+rt*h,cx=x+w/2+rdx*h;
+  let W=rw*h,Ht=rh*h,top=y+rt*h,cx=x+w*ax+rdx*h;
   const maxW=SW*(m?.94:.9);if(W>maxW){const f=maxW/W;W*=f}
   const minTop=st.offsetTop<10?hh+8:SW*.02;if(top<minTop){Ht-=minTop-top;top=minTop}
   let fs=W/k,sy=Ht/(.8*fs);if(sy<.85){fs=Ht/(.8*.85);W=fs*k;sy=.85}sy=Math.min(sy,2.2);
