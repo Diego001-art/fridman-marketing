@@ -328,7 +328,7 @@ h1,h2,h3{margin:0;font-weight:700;line-height:1.08;text-wrap:balance}
   .about h3{font-size:28px}.about p{font-size:16px}
   .fig text{font-size:12px}.fig .mo{font-size:11px}
 }
-@media(min-width:901px){.dots{display:none}#hero,#team,#book{overflow:hidden}}
+@media(min-width:901px){.dots{display:none}.sec,.slide,.foot{overflow:hidden!important}}
 /* ноутбуки 13–15" и невысокие окна */
 @media(min-width:901px) and (max-height:860px){
  .hdr{padding-block:16px}.hdr.solid{padding-block:10px}
@@ -655,7 +655,7 @@ try{const ro=new ResizeObserver(()=>fit());$$('.stage').forEach(x=>ro.observe(x)
 const fp=$('#fp'),pag=$$('#pager a'),track=$('#track'),slides=$$('.slide'),body=document.body;
 const STOPS=[$('#hero'),$('#team'),$('#book'),$('#pricing'),cs,$('#contacts')];
 const IDX={hero:0,team:1,book:2,pricing:3,cases:4,contacts:5};
-let S=0,cur=0,lockUntil=0,lastWheel=0,lastAbs=0;
+let S=0,cur=0,lockUntil=0,lastWheel=0,lastAbs=0,lastDir=0,used=false;
 function countIn(root){root.querySelectorAll('[data-count]:not(.done)').forEach(el=>{
  el.classList.add('done');const to=+el.dataset.count,t0=performance.now(),dur=1400;
  if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;
@@ -678,7 +678,7 @@ slides.forEach(x=>x.addEventListener('scroll',()=>{pauseUntil=performance.now()+
 cs.addEventListener('pointerdown',e=>{if(!e.target.closest('.c-arr'))pauseUntil=performance.now()+5000});
 
 const scroller=()=>STOPS[S]==cs?slides[cur]:STOPS[S];
-const canScroll=(el,d)=>{const o=getComputedStyle(el).overflowY;if(o!='auto'&&o!='scroll')return false;return d>0?el.scrollTop+el.clientHeight<el.scrollHeight-2:el.scrollTop>2};
+const canScroll=(el,d)=>{const o=getComputedStyle(el).overflowY;if(o!='auto'&&o!='scroll')return false;if(el.scrollHeight-el.clientHeight<30)return false;return d>0?el.scrollTop+el.clientHeight<el.scrollHeight-4:el.scrollTop>4};
 function apply(instant){
  const el=STOPS[S],y=Math.min(el.offsetTop,fp.scrollHeight-innerHeight);
  if(instant){body.classList.add('noanim');fp.style.transition=track.style.transition='none';requestAnimationFrame(()=>requestAnimationFrame(()=>{fp.style.transition=track.style.transition='';body.classList.remove('noanim')}))}
@@ -690,15 +690,17 @@ function apply(instant){
  $('#hdr').classList.toggle('solid',S>0);
 }
 function go(n){n=Math.max(0,Math.min(STOPS.length-1,n));if(n==S)return;const d=n>S?1:-1;S=n;
- const sc=scroller();sc.scrollTop=d>0?0:sc.scrollHeight;apply();lockUntil=performance.now()+1400}
+ const sc=scroller();sc.scrollTop=d>0?0:sc.scrollHeight;apply();lockUntil=performance.now()+950}
 const busy=()=>modal.classList.contains('open')||body.classList.contains('menu-open');
 addEventListener('wheel',e=>{if(busy())return;
  if(Math.abs(e.deltaX)>Math.abs(e.deltaY))return;
  const d=Math.sign(e.deltaY);if(!d)return;
  if(canScroll(scroller(),d))return;
- e.preventDefault();const now=performance.now(),a=Math.abs(e.deltaY);
- const fresh=now-lastWheel>160||a>lastAbs+20;lastWheel=now;lastAbs=a;
- if(now<lockUntil||!fresh||a<4)return;go(S+d)},{passive:false});
+ e.preventDefault();const now=performance.now(),a=Math.abs(e.deltaY)*(e.deltaMode?40:1),gap=now-lastWheel;
+ /* один жест (щелчок колеса или свайп тачпада с инерцией) = один блок */
+ if(gap>220||d!=lastDir||(now>=lockUntil&&a>=20&&a>lastAbs*1.8))used=false;
+ lastWheel=now;lastAbs=a;lastDir=d;
+ if(now<lockUntil||used||a<1)return;used=true;go(S+d)},{passive:false});
 let tx=0,ty=0,eDown=false,eUp=false,inCards=false;
 addEventListener('touchstart',e=>{if(busy())return;const t=e.touches[0];tx=t.clientX;ty=t.clientY;const sc=scroller();
  eDown=!canScroll(sc,1);eUp=!canScroll(sc,-1);inCards=!!e.target.closest('.cards')},{passive:true});
