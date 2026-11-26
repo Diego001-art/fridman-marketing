@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fridman Marketing</title>
+<link rel="stylesheet" href="fonts.css">
+<style>
+/* VOICE: уверенная независимая digital-команда, кино-постер
+   IDEA: каждый экран — афиша: гигантское слово за фигурой, красная орбита вокруг
+   PICTURE: вырезанные фото поверх огромных букв (фото — отдельный слой, его легко заменить)
+   COLOUR and TYPE: глубокий графит, белый, красный #ff1f2d; League Gothic + Manrope
+   LAYOUT: 5 полноэкранных блоков, блок 5 — горизонтальная галерея кейсов */
+:root{color-scheme:dark;--bg:#070b10;--ink:#f4f5f7;--mut:#a8b0bb;--line:rgba(255,255,255,.14);--red:#ff1f2d;--red2:#c3000f;--hd:'Manrope',system-ui,sans-serif;--gi:'League Gothic','Oswald','Impact',sans-serif;--ease:cubic-bezier(.2,.8,.2,1)}
+*{box-sizing:border-box;min-width:0}
+html{scroll-behavior:smooth}
+@media(min-width:901px){html{scroll-snap-type:y mandatory}}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 var(--hd);overflow-x:clip;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;cursor:pointer}
+img{display:block;max-width:none}
+
+/* ---------- header ---------- */
+.hdr{position:fixed;inset:0 0 auto;z-index:50;display:flex;align-items:center;gap:24px;padding:22px 4vw;transition:background .4s,padding .4s}
+.hdr.solid{background:rgba(7,11,16,.72);backdrop-filter:blur(14px);padding-block:14px}
+.logo{display:flex;align-items:center;gap:14px;line-height:1.15}
+.logo svg{width:64px;height:44px;flex:none}
+.logo b{display:block;font-weight:800;font-size:20px;letter-spacing:.01em}
+.logo span{font-size:15px;color:#d6dae0}
+.nav{margin-left:auto;display:flex;gap:clamp(18px,2.4vw,40px);font-size:16px;font-weight:500}
+.nav a{position:relative;padding:6px 0}
+.nav a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--red);transform:scaleX(0);transform-origin:left;transition:transform .35s var(--ease)}
+.nav a:hover::after,.nav a.on::after{transform:scaleX(1)}
+.btn{display:inline-flex;align-items:center;gap:10px;height:52px;padding:0 28px;border-radius:99px;border:1.5px solid rgba(255,255,255,.8);background:transparent;font-weight:600;font-size:16px;white-space:nowrap;position:relative;overflow:hidden;transition:background .3s,border-color .3s,transform .3s var(--ease),box-shadow .3s}
+.btn svg{width:14px;height:14px;transition:transform .3s var(--ease)}
+.btn:hover svg{transform:translate(3px,-3px)}
+.btn:hover{border-color:#fff;background:rgba(255,255,255,.06)}
+.btn.red{background:var(--red);border-color:var(--red);box-shadow:0 10px 40px -10px rgba(255,31,45,.7)}
+.btn.red:hover{background:#ff3845;transform:translateY(-2px)}
+.btn::before{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.35) 50%,transparent 70%);transform:translateX(-120%);transition:transform .8s}
+.btn:hover::before{transform:translateX(120%)}
+.play{white-space:nowrap;display:inline-flex;align-items:center;gap:14px;font-size:17px;font-weight:500}
+.play i{width:52px;height:52px;border-radius:50%;border:1.5px solid rgba(255,255,255,.7);display:grid;place-items:center;transition:background .3s,transform .3s var(--ease)}
+.play i svg{width:16px;height:16px;margin-left:3px}
+.play:hover i{background:var(--red);border-color:var(--red);transform:scale(1.08)}
+.burger{display:none;margin-left:auto;width:48px;height:48px;border-radius:50%;border:1.5px solid rgba(255,255,255,.5);background:none;position:relative}
+.burger span,.burger::before,.burger::after{content:"";position:absolute;left:14px;right:14px;height:2px;background:#fff;transition:transform .3s,opacity .3s}
+.burger::before{top:17px}.burger span{top:23px}.burger::after{top:29px}
+.menu-open .burger::before{transform:translateY(6px) rotate(45deg)}
+.menu-open .burger span{opacity:0}
+.menu-open .burger::after{transform:translateY(-6px) rotate(-45deg)}
+.mnav{position:fixed;inset:0;z-index:45;background:rgba(7,11,16,.97);display:flex;flex-direction:column;justify-content:center;gap:8px;padding:0 8vw;opacity:0;pointer-events:none;transition:opacity .4s}
+.mnav a{font-size:40px;font-weight:700;transform:translateY(20px);opacity:0;transition:.5s var(--ease)}
+.menu-open .mnav{opacity:1;pointer-events:auto}
+.menu-open .mnav a{transform:none;opacity:1}
+.mnav .btn{margin-top:28px;align-self:flex-start}
+
+/* ---------- pager ---------- */
+.pager{position:fixed;left:max(14px,1.1vw);top:50%;transform:translateY(-50%);z-index:40;display:flex;flex-direction:column;gap:14px}
+.pager a{display:flex;align-items:center;gap:10px;font-size:13px;height:14px;color:#fff;opacity:.45;transition:opacity .3s}
+.pager a::before{content:"";width:12px;height:1.5px;background:#fff;transition:width .4s var(--ease)}
+.pager a span{display:none}
+.pager a.on{opacity:1}.pager a.on::before{width:26px;background:var(--red)}
+
+/* ---------- sections ---------- */
+.sec{position:relative;height:100vh;height:100svh;min-height:640px;overflow:hidden;scroll-snap-align:start;isolation:isolate}
+.bgfx{position:absolute;inset:0;z-index:-2;background:radial-gradient(60% 55% at 55% 35%,#16212c 0%,transparent 70%),radial-gradient(40% 50% at 10% 100%,rgba(255,31,45,.07),transparent 70%),linear-gradient(180deg,#0a1016,#05080c)}
+.stage{position:absolute;inset:0}
+.giant{position:absolute;z-index:1;font-family:var(--gi);font-weight:400;line-height:.8;white-space:nowrap;pointer-events:none;transform:translate3d(calc(var(--mx,0)*-14px),calc(var(--my,0)*-8px),0);transition:transform .6s var(--ease)}
+.gw{display:inline-block;transform:scaleY(var(--sy,1));transform-origin:0 0;text-transform:uppercase}
+.gw i{display:inline-block;font-style:normal;background:linear-gradient(180deg,#fff 55%,#cfd4da);-webkit-background-clip:text;background-clip:text;color:transparent;opacity:0;transform:translateY(30%);transition:opacity .9s var(--ease),transform 1.1s var(--ease);transition-delay:calc(var(--i)*70ms + .1s)}
+.in .gw i{opacity:1;transform:none}
+.photo{position:absolute;z-index:3;transform:translateX(-50%)}
+.photo img{width:100%;height:100%;object-fit:contain;object-position:50% 100%;opacity:0;transform:translate3d(calc(var(--mx,0)*10px),40px,0) scale(1.04);transition:opacity 1.2s var(--ease) .25s,transform 1.4s var(--ease) .25s;filter:drop-shadow(0 30px 60px rgba(0,0,0,.5))}
+.in .photo img{opacity:1;transform:translate3d(calc(var(--mx,0)*10px),calc(var(--my,0)*6px),0)}
+.orbit{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+.orbit.back{z-index:2}.orbit.front{z-index:4}
+.orbit .ln{fill:none;stroke:var(--red);stroke-width:2.2;stroke-dasharray:1;stroke-dashoffset:1;filter:url(#glow);transition:stroke-dashoffset 2.4s var(--ease) .4s}
+.orbit .sp{fill:none;stroke:#ffd0d3;stroke-width:3.5;stroke-linecap:round;stroke-dasharray:.035 .965;filter:url(#glow);opacity:0;transition:opacity .6s 2s;animation:spark 7s linear infinite}
+.in .orbit .ln,.on .orbit .ln{stroke-dashoffset:0}.in .orbit .sp,.on .orbit .sp{opacity:1}
+@keyframes spark{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+.ui{position:absolute;z-index:5}
+[data-r]{opacity:0;transform:translateY(26px);transition:opacity .9s var(--ease),transform .9s var(--ease);transition-delay:calc(var(--d,0)*1s)}
+.in [data-r]{opacity:1;transform:none}
+.eyebrow{display:flex;align-items:center;gap:14px;font-size:15px;font-weight:500;color:#d6dae0}
+.eyebrow::before{content:"";width:44px;height:1.5px;background:currentColor}
+.eyebrow b{font-weight:700;color:#fff;letter-spacing:.04em}
+.dot{color:var(--red)}
+h1,h2,h3{margin:0;font-weight:700;line-height:1.08;text-wrap:balance}
+
+/* hero */
+.h-meta{right:3vw;top:17vh;font-size:16px;line-height:1.55;color:#e8ebef}
+.h-meta hr{width:18px;margin:6px 0 10px;border:0;border-top:1.5px solid #fff;opacity:.6}
+.h-lead{left:4.4vw;bottom:18vh;max-width:min(36vw,520px)}
+.h-lead h1{font-size:clamp(24px,2.15vw,34px);font-weight:500;line-height:1.22;text-shadow:0 4px 30px rgba(0,0,0,.6)}
+.h-cta{left:4.2vw;bottom:8vh;display:flex;gap:30px;align-items:center}
+.h-serv{right:4.2vw;bottom:12vh;display:flex;gap:44px}
+.h-serv ul{list-style:none;margin:0;padding:0;font-size:clamp(20px,1.6vw,26px);line-height:1.75}
+.h-serv li{cursor:default;transition:color .3s,transform .3s var(--ease)}
+.h-serv li:hover{color:var(--red);transform:translateX(-6px)}
+.vline{width:1.5px;background:rgba(255,255,255,.55);position:relative}
+.vline::after{content:"";position:absolute;bottom:-4px;left:-3px;width:7px;height:7px;border-radius:50%;background:#fff}
+.mouse{left:50%;bottom:4vh;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px}
+.mouse span{width:26px;height:40px;border:1.5px solid #fff;border-radius:14px;position:relative}
+.mouse span::after{content:"";position:absolute;left:50%;top:8px;width:3px;height:7px;margin-left:-1.5px;border-radius:2px;background:#fff;animation:wheel 1.8s infinite}
+.mouse svg{width:16px;height:14px;animation:bob 1.8s infinite}
+@keyframes wheel{0%{opacity:1;transform:none}80%{opacity:0;transform:translateY(10px)}100%{opacity:0}}
+@keyframes bob{50%{transform:translateY(4px)}}
+
+/* team / book */
+.side{left:4.6vw;top:max(13vh,96px);max-width:min(27vw,420px)}
+.side h2{font-size:clamp(34px,3.4vw,54px);margin:4vh 0 3vh}
+.side p{color:#c9ced5;font-size:clamp(15px,1.12vw,18px);margin:0 0 4vh;line-height:1.55}
+.book-btns{display:flex;gap:20px;flex-wrap:wrap;margin-top:5vh}
+.litres b{font-weight:800}.litres b em{font-style:normal;color:var(--red)}
+.vscale{right:4.6vw;top:58vh;display:flex;flex-direction:column;align-items:center;gap:8px;font-size:14px;color:#cfd4da}
+.vscale .vline{height:16vh}
+
+/* pricing */
+.p-in{position:absolute;inset:0;z-index:3;padding:max(10vh,90px) 4.4vw 4vh;display:flex;flex-direction:column}
+.p-head{display:flex;align-items:flex-end;justify-content:space-between;gap:40px;margin-bottom:4.5vh}
+.p-head h2{font-size:clamp(34px,3.4vw,56px);margin-top:2vh}
+.p-head p{margin:0;max-width:520px;padding-left:56px;border-left:1.5px solid var(--line);color:#c9ced5;font-size:clamp(15px,1.15vw,19px)}
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1.6vw;flex:1;min-height:0}
+.card{position:relative;display:flex;flex-direction:column;padding:clamp(22px,2.4vh,34px) clamp(20px,2.2vw,40px);border-radius:24px;border:1px solid var(--line);background:linear-gradient(160deg,rgba(255,255,255,.06),rgba(255,255,255,.015) 45%,rgba(0,0,0,.2));box-shadow:inset 0 1px 0 rgba(255,255,255,.08);transition:transform .5s var(--ease),border-color .4s,box-shadow .5s}
+.card:hover{transform:translateY(-8px);border-color:rgba(255,255,255,.3);box-shadow:0 30px 60px -30px rgba(0,0,0,.8),inset 0 1px 0 rgba(255,255,255,.1)}
+.card.pop{border-color:rgba(255,60,70,.85);background:linear-gradient(165deg,rgba(255,31,45,.55),rgba(140,0,10,.35) 45%,rgba(40,0,4,.55));box-shadow:0 0 60px -10px rgba(255,31,45,.45),inset 0 1px 0 rgba(255,255,255,.15)}
+.badge{position:absolute;top:-15px;left:50%;transform:translateX(-50%);background:var(--red);border-radius:99px;padding:4px 16px;font-size:14px;font-weight:700;white-space:nowrap}
+.card h3{font-size:clamp(24px,1.9vw,32px)}
+.card .sub{color:#d6dae0;font-size:clamp(14px,1.05vw,17px);margin-top:2px}
+.price{display:flex;align-items:baseline;gap:8px;font-weight:800;font-size:clamp(30px,2.75vw,46px);margin:2vh 0 1.8vh;padding-bottom:1.8vh;border-bottom:1px solid var(--line);white-space:nowrap}
+.price small{font-size:16px;font-weight:500;color:#d6dae0}
+.feat{list-style:none;margin:0;padding:0;font-size:clamp(12.5px,min(.95vw,1.6vh),15.5px);line-height:1.28;display:grid;gap:clamp(4px,.95vh,12px);align-content:start;flex:1}
+.feat li{position:relative;padding-left:30px}
+.feat li::before{content:"";position:absolute;left:0;top:.62em;width:16px;height:2px;background:var(--red)}
+.pop .feat li::before{background:#fff}
+.feat li.b{font-weight:700}
+.card .btn{justify-content:center;margin-top:1.8vh;width:100%;height:clamp(44px,5.6vh,56px)}
+.card.pop .btn{background:var(--red);border-color:#ff4a55;box-shadow:0 10px 40px -8px rgba(255,31,45,.8)}
+.card{opacity:0;transform:translateY(40px);transition:opacity .9s var(--ease),transform .9s var(--ease),border-color .4s,box-shadow .5s;transition-delay:calc(var(--i)*.12s + .2s),calc(var(--i)*.12s + .2s),0s,0s}
+.in .card{opacity:1;transform:none}
+.in .card:hover{transform:translateY(-8px);transition-delay:0s}
+
+/* cases */
+#cases{height:600vh;scroll-snap-align:none;overflow:clip}
+.snapc{position:absolute;left:0;width:1px;height:100vh;scroll-snap-align:start}
+.c-sticky{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
+.track{display:flex;height:100%;will-change:transform}
+.slide{--ac:#1e9bff;flex:none;width:100vw;height:100%;position:relative;padding:max(11vh,92px) 4vw 7vh;display:grid;grid-template-columns:minmax(0,2.2fr) minmax(0,1fr);gap:2.4vw;isolation:isolate}
+.slide .bgfx{background:radial-gradient(45% 60% at 88% 45%,color-mix(in srgb,var(--ac) 18%,transparent),transparent 70%),linear-gradient(180deg,#0a1016,#05080c)}
+.s-main,.s-side{position:relative;z-index:3}.s-main{display:grid;grid-template-rows:auto minmax(0,1fr) minmax(0,1.35fr);gap:2.2vh}
+.s-head h2{font-size:clamp(32px,3.6vw,60px);font-weight:800;margin-top:.6vh}
+.s-head h2 .d{color:var(--ac)}
+.box{border:1px solid var(--line);border-radius:22px;background:linear-gradient(160deg,rgba(255,255,255,.05),rgba(255,255,255,.01));backdrop-filter:blur(6px)}
+.chart{display:flex;flex-direction:column;padding:2vh 2.4vw 1.4vh}
+.chart-top{display:flex;align-items:baseline;gap:28px;flex-wrap:wrap}
+.chart-top h3{font-size:clamp(20px,1.85vw,30px);font-weight:800}
+.src{font-size:15px;font-weight:700;color:#e6e9ee;display:flex;align-items:center;gap:6px}
+.src i{width:16px;height:16px;border-radius:50%;background:conic-gradient(#ffcc00 0 50%,#1e9bff 0);display:inline-block}
+.leg{font-size:13px;color:#c9ced5;display:flex;align-items:center;gap:8px;margin-top:4px}
+.leg i{width:12px;height:12px;border-radius:3px;background:var(--ac)}
+.fig{position:relative;flex:1;min-height:120px}
+.fig svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.fig .ar{opacity:0;transition:opacity 1.2s .8s}
+.fig .l{fill:none;stroke:var(--ac);stroke-width:3;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 1.8s var(--ease) .2s;filter:drop-shadow(0 0 6px var(--ac))}
+.fig .pt,.fig .vl{opacity:0;transition:opacity .5s;transition-delay:calc(var(--i)*.15s + .4s)}
+.on .fig .l{stroke-dashoffset:0}.on .fig .ar,.on .fig .pt,.on .fig .vl{opacity:1}
+.fig text{fill:#fff;font:700 15px var(--hd)}
+.fig .vl{fill:color-mix(in srgb,var(--ac) 35%,#fff)}
+.fig .mo{fill:#e6e9ee;font-weight:500;font-size:14px}
+.s-bot{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,1fr);gap:1.4vw;min-height:0}
+.tbl{padding:1.4vh 1.4vw;overflow:hidden;display:flex;align-items:flex-start}
+.q{width:100%;border-collapse:collapse;font-size:clamp(11px,1.5vh,14.5px)}
+.q th{font-weight:600;text-align:left;color:#e6e9ee;padding:0 6px 1vh;font-size:.95em}
+.q th:not(:first-child),.q td:not(:first-child){text-align:center;white-space:nowrap}
+.q td{padding:.55vh 6px;border-top:1px solid rgba(255,255,255,.08)}
+.q td:nth-child(2){background:rgba(26,160,70,.32)}
+.q td:nth-child(3){background:rgba(26,160,70,.14)}
+.q td sup{color:#4dff7c;font-size:.75em;font-weight:700;margin-left:2px}
+.q tr{opacity:0;transform:translateX(-12px);transition:.5s var(--ease);transition-delay:calc(var(--i)*.05s + .3s)}
+.on .q tr{opacity:1;transform:none}
+.trust{padding:2vh 1.6vw;display:flex;flex-direction:column}
+.trust h3{font-size:clamp(20px,1.95vw,32px);font-weight:800}
+.trust h3 em{font-style:normal;color:var(--ac)}
+.trust p{margin:1.2vh 0 0;font-size:clamp(13px,1.05vw,16.5px);color:#d6dae0;line-height:1.35}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:1vw;margin-top:auto;padding-top:1.4vh}
+.stat{border:1.5px solid color-mix(in srgb,var(--ac) 70%,transparent);border-radius:18px;padding:1.3vh 1vw;box-shadow:inset 0 0 30px -12px var(--ac)}
+.stat b{display:block;font-size:clamp(24px,2.3vw,38px);font-weight:800;color:var(--ac);line-height:1.1}
+.stat em{font-style:normal;font-size:clamp(11.5px,.9vw,14px);color:#e6e9ee;line-height:1.2;display:block}
+.s-side{display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:2vh}
+.s-side .lead{margin:0;padding-left:2vw;border-left:1.5px solid var(--line);font-size:clamp(15px,1.2vw,20px);line-height:1.4;color:#e6e9ee;margin-top:1vh}
+.s-img{position:relative;margin-right:-4vw}
+.s-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;-webkit-mask-image:radial-gradient(ellipse 62% 62% at 55% 50%,#000 30%,transparent 72%);mask-image:radial-gradient(ellipse 62% 62% at 55% 50%,#000 30%,transparent 72%);transform:scale(1.08) translateX(40px);opacity:0;transition:transform 1.6s var(--ease),opacity 1.2s}
+.on .s-img img{transform:none;opacity:1}
+.about h3{font-size:clamp(26px,2.4vw,40px);font-weight:800;margin-bottom:1.4vh}
+.about p{margin:0;font-size:clamp(14px,1.25vw,20px);line-height:1.4;color:#e6e9ee}
+.c-ui{position:absolute;z-index:6;left:4vw;right:4vw;bottom:2.4vh;display:flex;align-items:center;gap:20px;pointer-events:none}
+.c-ui>*{pointer-events:auto}
+.c-count{font-size:14px;font-weight:700;letter-spacing:.06em;white-space:nowrap}
+.c-bar{flex:1;height:2px;background:rgba(255,255,255,.12);position:relative;overflow:hidden;border-radius:2px}
+.c-bar i{position:absolute;inset:0;background:var(--red);transform-origin:left;transform:scaleX(var(--p,0))}
+.c-arr{width:44px;height:44px;border-radius:50%;border:1.5px solid rgba(255,255,255,.55);background:rgba(7,11,16,.5);display:grid;place-items:center;transition:background .3s,border-color .3s}
+.c-arr:hover{background:var(--red);border-color:var(--red)}
+.c-arr svg{width:16px;height:16px}
+.c-arr:disabled{opacity:.3;pointer-events:none}
+
+.foot{scroll-snap-align:end;padding:48px 4.4vw;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:24px;align-items:center;justify-content:space-between;color:#c9ced5;font-size:15px;background:#05080c}
+.foot .btn{color:#fff}
+
+/* modal */
+.modal{position:fixed;inset:0;z-index:80;display:grid;place-items:center;padding:16px;background:rgba(3,5,8,.75);backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity .35s}
+.modal.open{opacity:1;pointer-events:auto}
+.mbox{width:min(480px,100%);background:#0d141b;border:1px solid var(--line);border-radius:24px;padding:32px;position:relative;transform:translateY(20px) scale(.97);transition:transform .45s var(--ease)}
+.modal.open .mbox{transform:none}
+.mbox h3{font-size:28px;margin-bottom:6px}.mbox>p{color:var(--mut);margin:0 0 20px}
+.mbox label{display:block;font-size:14px;color:#c9ced5;margin:12px 0 6px}
+.mbox input,.mbox select,.mbox textarea{width:100%;font:16px var(--hd);color:#fff;background:#070b10;border:1px solid var(--line);border-radius:14px;padding:13px 14px;outline:none;transition:border-color .3s}
+.mbox input:focus,.mbox select:focus,.mbox textarea:focus{border-color:var(--red)}
+.mbox .btn{width:100%;justify-content:center;margin-top:20px}
+.x{position:absolute;top:14px;right:14px;width:44px;height:44px;border-radius:50%;border:0;background:rgba(255,255,255,.06);font-size:22px}
+.note{font-size:14px;color:var(--mut);margin-top:12px;min-height:1.4em}
+:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+
+/* ---------- mobile ---------- */
+@media(max-width:1180px) and (min-width:901px){.nav{display:none}.hdr .btn{margin-left:auto}}
+@media(max-width:900px){
+  .nav,.hdr>.btn,.pager,.h-serv,.vscale,.mouse,.h-meta{display:none}
+  .burger{display:block}
+  .hdr{padding:14px 5vw}
+  .logo svg{width:50px;height:36px}.logo b{font-size:16px}.logo span{font-size:13px}
+  .sec{height:auto;min-height:0;overflow:hidden}
+  #hero{height:100svh;min-height:600px}
+  .h-lead{left:5vw;right:5vw;bottom:calc(9vh + 64px);max-width:none}
+  .h-lead h1{font-size:clamp(22px,6.4vw,30px)}
+  .h-cta{left:5vw;right:5vw;bottom:4vh;gap:18px}
+  .h-cta .btn{height:50px;padding:0 22px}
+  #hero::after{content:"";position:absolute;inset:auto 0 0;height:45%;z-index:4;background:linear-gradient(180deg,transparent,rgba(5,8,12,.92) 70%)}
+  .flow{display:flex;flex-direction:column;padding:96px 5vw 48px}
+  .flow .ui,.flow .side{position:static;max-width:none}
+  .flow .stage{position:relative;inset:auto;margin:6px -5vw 0}
+  #team .stage{height:min(100vw,600px)}
+  .slide .orbit,#pricing>.orbit{display:none}
+  .s-img img{object-fit:contain;-webkit-mask-image:radial-gradient(ellipse 70% 70% at 50% 50%,#000 45%,transparent 75%);mask-image:radial-gradient(ellipse 70% 70% at 50% 50%,#000 45%,transparent 75%)}
+  #book .stage{height:min(100vw,600px)}
+  .side h2{font-size:clamp(32px,9vw,46px);margin:18px 0 14px}
+  .side p{font-size:16px;margin-bottom:20px}
+  .book-btns{margin-top:22px}
+  .book-btns .btn{flex:1;justify-content:center;padding:0 18px}
+  .p-in{position:static;padding:96px 0 48px}
+  .p-head{flex-direction:column;align-items:flex-start;gap:14px;margin-bottom:34px;padding:0 5vw}
+  .p-head h2{font-size:clamp(30px,8.4vw,44px)}
+  .p-head p{padding-left:16px;font-size:16px}
+  .cards{display:grid;grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:min(84vw,360px);gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding:18px 5vw 8px;scroll-padding:0 5vw;scrollbar-width:none}
+  .cards::-webkit-scrollbar,.track::-webkit-scrollbar{display:none}
+  .card{scroll-snap-align:start;padding:26px 22px}
+  .feat{font-size:15px;gap:11px}
+  .card .btn{height:52px;margin-top:22px}
+  .price{margin:18px 0 16px;padding-bottom:16px}
+  .dots{display:flex;justify-content:center;gap:8px;margin-top:16px}
+  .dots i{width:8px;height:8px;border-radius:9px;background:rgba(255,255,255,.3);transition:.3s}
+  .dots i.on{width:24px;background:var(--red)}
+  #cases{height:auto}
+  .snapc{display:none}
+  .c-sticky{position:relative;height:auto;padding-top:84px}
+  .track{overflow-x:auto;scroll-snap-type:x mandatory;transform:none!important;scrollbar-width:none;align-items:flex-start}
+  .slide{scroll-snap-align:start;height:auto;display:flex;flex-direction:column;padding:12px 5vw 90px;gap:16px}
+  .s-main,.s-side{display:contents}
+  .s-head{order:1}.s-side .lead{order:2;font-size:16px;padding-left:14px}
+  .s-img{order:3;height:62vw;max-height:340px;margin:0 -5vw}
+  .chart{order:4;padding:18px 16px 10px}.fig{height:210px;flex:none}
+  .trust{order:5;padding:20px 18px}.tbl{order:6;padding:12px;overflow-x:auto}.about{order:7}
+  .s-bot{display:contents}
+  .s-head h2{font-size:clamp(30px,8.6vw,44px)}
+  .chart-top{gap:6px 16px}.chart-top h3{font-size:20px;width:100%}
+  .q{font-size:13px}.q td{padding:7px 5px}
+  .stats{gap:10px;padding-top:16px}.stat{padding:12px}.stat b{font-size:28px}.stat em{font-style:normal;font-size:13px}
+  .trust h3{font-size:22px}.trust p{font-size:15px}
+  .about h3{font-size:28px}.about p{font-size:16px}
+  .fig text{font-size:12px}.fig .mo{font-size:11px}
+  .c-ui{bottom:22px;left:5vw;right:5vw}
+}
+@media(min-width:901px){.dots{display:none}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important;animation:none!important;transition-delay:0s!important}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <filter id="glow" x="-20%" y="-50%" width="140%" height="200%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <symbol id="arr" viewBox="0 0 14 14"><path d="M3 11 11 3M5 3h6v6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="tri" viewBox="0 0 16 16"><path d="M3 1.5v13L14 8z" fill="currentColor"/></symbol>
+</defs></svg>
+
+<header class="hdr" id="hdr">
+  <a class="logo" href="#hero" aria-label="Fridman Marketing — наверх">
+    <svg viewBox="0 0 64 44"><path d="M12 2h50l-10 40H2z" fill="#ff1f2d"/><path d="M22 34l5-22h17l-1 5H32l-1 4h10l-1 5H30l-2 8z" fill="#fff"/><circle cx="57" cy="38" r="3.4" fill="#ff1f2d"/></svg>
+    <div><b>FRIDMAN MARKETING</b><span>Independent digital team</span></div>
+  </a>
+  <nav class="nav" id="nav">
+    <a href="#pricing">Услуги</a><a href="#cases">Кейсы</a><a href="#team">О нас</a><a href="#book">Блог</a><a href="#contacts">Контакты</a>
+  </nav>
+  <button class="btn" data-open>Обсудить проект <svg><use href="#arr"/></svg></button>
+  <button class="burger" id="burger" aria-label="Меню"><span></span></button>
+</header>
+<div class="mnav" id="mnav">
+  <a href="#pricing">Услуги</a><a href="#cases">Кейсы</a><a href="#team">О нас</a><a href="#book">Книга</a><a href="#contacts">Контакты</a>
+  <button class="btn red" data-open>Обсудить проект <svg><use href="#arr"/></svg></button>
+</div>
+
+<nav class="pager" id="pager" aria-label="Блоки">
+  <a href="#hero"><span>01</span></a><a href="#team"><span>02</span></a><a href="#book"><span>03</span></a><a href="#pricing"><span>04</span></a><a href="#cases"><span>05</span></a>
+</nav>
+
+<main>
+<!-- 01 HERO — текст FRIDMAN лежит ЗА фото; чтобы сменить фото, замените img/hero.webp -->
+<section class="sec" id="hero" data-par>
+  <div class="bgfx"></div>
+  <div class="stage">
+    <div class="giant" data-box="12.3,17.5,77,50" data-mbox="5,13,90,20"><span class="gw">Fridman</span></div>
+    <svg class="orbit back" data-orbit="850,560,800,190,-11"></svg>
+    <div class="photo" style="left:50.8%;bottom:0;height:91.5%;aspect-ratio:2120/1722" data-m="left:52%;height:72%"><img src="img/hero.webp" alt="Марк Фридман, основатель Fridman Marketing"></div>
+    <svg class="orbit front" data-orbit="850,560,800,190,-11" data-front></svg>
+  </div>
+  <div class="ui h-meta" data-r style="--d:.9">2026 ©<hr>Krasnodar,<br>Worldwide</div>
+  <div class="ui h-lead"><h1 data-r style="--d:.7">Независимая digital-команда для роста трафика, заявок и бренда.</h1></div>
+  <div class="ui h-cta" data-r style="--d:.9">
+    <button class="btn red" data-open>Обсудить проект <svg><use href="#arr"/></svg></button>
+    <a class="play" href="#cases"><i><svg><use href="#tri"/></svg></i>Смотреть кейсы</a>
+  </div>
+  <div class="ui h-serv" data-r style="--d:1.1"><ul><li>SEO</li><li>Маркетинг</li><li>Дизайн</li><li>Разработка</li></ul><div class="vline"></div></div>
+  <a class="ui mouse" href="#team" aria-label="Листать вниз"><span></span><svg viewBox="0 0 16 14"><path d="M2 2l6 5 6-5M2 7l6 5 6-5" fill="none" stroke="#fff" stroke-width="1.5"/></svg></a>
+</section>
+
+<!-- 02 TEAM -->
+<section class="sec flow" id="team" data-par>
+  <div class="bgfx"></div>
+  <div class="ui side">
+    <div class="eyebrow" data-r>02 <span style="opacity:.5">/</span> <b>КОМАНДА</b></div>
+    <h2 data-r style="--d:.15">Люди, которые делают результат<span class="dot">.</span></h2>
+    <p data-r style="--d:.3">Стратеги, SEO-специалисты, маркетологи, дизайнеры и разработчики, которые работают на рост вашего бизнеса.</p>
+    <a class="play" href="#pricing" data-r style="--d:.45"><i><svg><use href="#tri"/></svg></i>О нашей команде</a>
+  </div>
+  <div class="stage">
+    <div class="giant" data-box="33,10,54,38" data-mbox="6,4,88,40"><span class="gw">Team</span></div>
+    <svg class="orbit back" data-orbit="900,520,980,150,-14"></svg>
+    <div class="photo" style="left:62%;bottom:0;height:80%;max-width:66vw;aspect-ratio:2820/1502" data-m="left:50%;height:auto;width:112%;max-width:none"><img src="img/team.webp" alt="Команда Fridman Marketing"></div>
+    <svg class="orbit front" data-orbit="900,520,980,150,-14" data-front></svg>
+  </div>
+</section>
+
+<!-- 03 BOOK -->
+<section class="sec flow" id="book" data-par>
+  <div class="bgfx"></div>
+  <div class="ui side">
+    <div class="eyebrow" data-r>03 <span style="opacity:.5">/</span> <b>КНИГА</b></div>
+    <h2 data-r style="--d:.15">SEO: Органическая драма<span class="dot">.</span></h2>
+    <p data-r style="--d:.3">Моя книга о реальном SEO — без мифов и «волшебных» схем. Практика, процессы и ошибки, которые работают на результат.</p>
+    <a class="play" href="#book" data-r style="--d:.45"><i><svg><use href="#tri"/></svg></i>Смотреть обзор</a>
+    <div class="book-btns" data-r style="--d:.6">
+      <a class="btn red" href="https://www.litres.ru/search/?q=SEO%20%D0%9E%D1%80%D0%B3%D0%B0%D0%BD%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B0%D1%8F%20%D0%B4%D1%80%D0%B0%D0%BC%D0%B0">Купить книгу <svg><use href="#arr"/></svg></a>
+      <a class="btn litres" href="https://www.litres.ru/search/?q=SEO%20%D0%9E%D1%80%D0%B3%D0%B0%D0%BD%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B0%D1%8F%20%D0%B4%D1%80%D0%B0%D0%BC%D0%B0"><b>Лит<em>рес</em></b> <svg><use href="#arr"/></svg></a>
+    </div>
+  </div>
+  <div class="stage">
+    <div class="giant" data-box="31.7,11.7,58,52.6" data-mbox="5,4,90,46"><span class="gw">Book</span></div>
+    <svg class="orbit back" data-orbit="1000,520,760,120,-9"></svg>
+    <div class="photo" style="left:61.6%;top:22.3%;height:64.3%;aspect-ratio:1500/1210" data-m="left:56%;top:22%;height:78%"><img src="img/book.webp" alt="Книга «SEO: Органическая драма»"></div>
+    <svg class="orbit front" data-orbit="1000,520,760,120,-9" data-front></svg>
+  </div>
+  <div class="ui vscale" data-r style="--d:1">01<div class="vline"></div></div>
+</section>
+
+<!-- 04 PRICING -->
+<section class="sec" id="pricing">
+  <div class="bgfx"></div>
+  <svg class="orbit back" data-orbit="1100,900,1250,760,0" style="opacity:.8"></svg>
+  <div class="p-in">
+    <div class="p-head">
+      <div><div class="eyebrow" data-r>04 <span style="opacity:.5">/</span> <b>ТАРИФЫ</b></div>
+      <h2 data-r style="--d:.15">Тарифы на SEO-продвижение<span class="dot">.</span></h2></div>
+      <p data-r style="--d:.3">Подбираем оптимальный формат сотрудничества под задачи, бюджет и текущий этап вашего бизнеса.</p>
+    </div>
+    <div class="cards" id="cards"></div>
+    <div class="dots" id="pdots"></div>
+  </div>
+</section>
+
+<!-- 05 CASES — горизонтальная галерея -->
+<section class="sec" id="cases">
+  <div class="c-sticky">
+    <div class="track" id="track"></div>
+    <div class="c-ui">
+      <span class="c-count" id="ccount">01 / 06</span>
+      <div class="c-bar"><i id="cbar"></i></div>
+      <button class="c-arr" id="cprev" aria-label="Предыдущий кейс"><svg viewBox="0 0 16 16"><path d="M10 3 5 8l5 5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button>
+      <button class="c-arr" id="cnext" aria-label="Следующий кейс"><svg viewBox="0 0 16 16"><path d="M6 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="foot" id="contacts">
+  <div><b style="color:#fff">FRIDMAN MARKETING</b> · Krasnodar, Worldwide · 2026 ©</div>
+  <button class="btn red" data-open>Обсудить проект <svg><use href="#arr"/></svg></button>
+</footer>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mt">
+  <form class="mbox" id="form">
+    <button type="button" class="x" data-close aria-label="Закрыть">×</button>
+    <h3 id="mt">Обсудить проект</h3>
+    <p>Оставьте контакты — расскажем, как вырастить трафик и заявки.</p>
+    <label for="f-name">Имя</label><input id="f-name" name="name" required autocomplete="name">
+    <label for="f-tel">Телефон или Telegram</label><input id="f-tel" name="tel" required>
+    <label for="f-plan">Тариф</label>
+    <select id="f-plan" name="plan"><option>Пока не знаю</option><option>Baza</option><option>Standard</option><option>Premium</option><option>Premium+</option></select>
+    <button class="btn red" type="submit">Отправить заявку <svg><use href="#arr"/></svg></button>
+    <div class="note" id="fnote"></div>
+  </form>
+</div>
+
+<script>
+{
+/* ===== ДАННЫЕ: тарифы ===== */
+const PLANS=[
+ {n:'Baza',s:'Контроль и аудит сайта',p:30000,f:['Технический аудит сайта','Рекомендации по структуре сайта','Оптимизация мета-тегов','Анализ поисковых конкурентов','Расширение семантического ядра','Анализ внутренней перелинковки','Анализ индексации страниц в Яндексе и Google','Отслеживание позиций в поисковых системах']},
+ {n:'Standard',s:'Комплексное продвижение',p:90000,pop:1,f:['Подбор семантического ядра','Составление структуры сайта','Технический аудит сайта','Аудит юзабилити','Рекомендации по SEO-текстам','Аудит коммерческих факторов','Рекомендации по добавлению новых страниц сайта','Комплексная настройка мета-тегов','Продвижение по доп. запросам','Аудит поведенческих характеристик','Развитие ссылочного профиля']},
+ {n:'Premium',s:'Масштабирование',p:145000,f:['Все пункты тарифов Baza и Standard','*Ускоренное SEO продвижение','Углублённое техническое SEO','Создание экспертного контента и его продвижение по брендовым запросам','Региональное SEO','Оптимизация конверсии (CRO)','Управление репутацией (SERM)','Digital PR и комплексное внешнее продвижение']},
+ {n:'Premium+',s:'Внешний SEO-отдел',p:180000,f:['Все пункты тарифов Baza, Standard и Premium','*Ускоренное SEO продвижение','Комплексная digital-стратегия','Развитие присутствия бренда в AI-поиске','Мониторинг упоминаний и аналитика бренда','Приоритетное выполнение задач','Персональный руководитель проекта','Стратегические встречи и расширенная отчётность']}
+];
+/* ===== ДАННЫЕ: кейсы (фото — img/case-*.webp, можно заменить) =====
+   rows: [запрос, [позиция, рост], [позиция, рост], позиция]; рост 0 — без прироста */
+const CASES=[
+ {t:'Фабрика матрасов',ac:'#1e9bff',img:'img/case-mattress.webp',g:77,mo:['МАР','АПР','МАЙ','ИЮН','ИЮЛ','АВГ','СЕН','ОКТ','НОЯ'],v:[0,22,26,25,29,34,45,64,77],cols:['МАЙ','АПР','МАР'],
+  rows:[['Недорогие матрасы',[1,46],[47,4],51],['Матрас для дивана',[1,7],[8,15],21],['Купить матрас на диван',[1,25],[24,5],29],['Распродажа матрасов',[2,20],[22,25],47],['Матрас от производителя купить',[1,34],[35,25],60],['Матрас купить с доставкой',[2,61],[63,4],67],['Матрас полуторка',[2,45],[47,4],51],['Жесткие ортопедические матрасы',[3,24],[35,11],46],['Полутораспальный матрас',[2,50],[52,1],53]],
+  tt:'Доверие к бренду выросло на',tv:26,tx:'Была проведена работа по оптимизации ссылочного веса на площадках-донорах, форумах и в соцсетях.',s1:[26,'выросло доверие к бренду'],s2:[70,'выросло семантическое ядро запросов'],
+  ab:'Крупная фабрика мебели и матрасов в Москве, один из лидеров рынка по продаже мебели и матрасов, имеет сеть в более чем 10 городах РФ.'},
+ {t:'Интернет-магазин алкоголя',ac:'#ff2638',img:'img/case-wine.webp',g:130,mo:['ЯНВ','ФЕВ','МАР','АПР','МАЙ','ИЮН','ИЮЛ','АВГ'],v:[0,1,27,24,51,55,98,130],cols:['АВГ','АПР','ЯНВ'],
+  rows:[['Интернет-магазин алкоголя',[3,8],[60,1],71],['Купить алкоголь онлайн',[1,4],[43,10],53],['Купить вино',[7,20],[26,5],'—'],['Красное полусладкое вино',[1,7],[78,1],'—'],['Шампанское игристое',[4,1],'—','—'],['Ром купить в Москве',[2,10],[33,5],76],['Купить коньяк',[1,4],[41,3],82],['Красное сухое вино купить',[5,1],'—','—'],['Купить виски цена',[1,7],[28,1],'—']],
+  tt:'Доверие к бренду выросло на',tv:64,tx:'Были написаны статьи и обзоры в Яндекс Дзен для охвата большей аудитории через информационные запросы.',s1:[64,'выросло доверие к бренду'],s2:[87,'выросло семантическое ядро запросов'],
+  ab:'Крупный федеральный интернет-магазин алкогольной продукции в России, с сетью торговых магазинов по всей стране.'},
+ {t:'Стоматология',ac:'#1aa8ff',img:'img/case-dental.webp',g:94,mo:['ОКТ','ДЕК','ФЕВ','АПР','ИЮН','ИЮЛ','АВГ','СЕН'],v:[0,24,39,41,42,48,77,94],cols:['АВГ','МАР','ОКТ'],
+  rows:[['Стоматология',[4,17],[21,70],91],['Лечение зуба',[1,18],[19,13],32],['Установка виниров',[2,12],[14,59],73],['Протезирование зубов',[2,31],[21,41],62],['Зубные импланты',[5,31],[21,71],92],['Коронка на зуб',[1,11],[2,25],27],['Детская стоматология',[1,0],[1,1],2],['Лечение кариеса',[3,0],[3,1],4],['Удаление зуба',[3,11],[14,20],34]],
+  tt:'Доверие к бренду выросло на',tv:33,tx:'Были написаны статьи и обзоры в Яндекс Дзен для охвата большей аудитории через информационные запросы.',s1:[33,'выросло доверие к бренду'],s2:[47,'выросло семантическое ядро запросов'],
+  ab:'Сеть современных стоматологических клиник. Оказывает полный спектр услуг: лечение, имплантация, протезирование, эстетическая стоматология и детский приём.'},
+ {t:'Автосервис',ac:'#ff8a1a',img:'img/case-auto.webp',g:86,mo:['НОЯ','ЯНВ','МАР','АПР','ИЮН','ИЮЛ','АВГ','СЕН'],v:[0,18,31,37,44,58,71,86],cols:['АВГ','МАР','ОКТ'],
+  rows:[['Автосервис',[3,15],[18,39],57],['Ремонт двигателя',[2,9],[11,25],36],['Ремонт ходовой',[4,12],[16,33],49],['Ремонт BMW',[3,7],[10,23],33],['Замена масла',[1,3],[4,10],14],['Замена тормозных дисков',[2,7],[9,19],28],['Диагностика авто',[1,6],[7,18],25],['Сход-развал',[3,5],[8,13],21],['Ремонт коробки передач',[4,8],[12,27],39],['Замена сцепления',[5,9],[14,30],44]],
+  tt:'Доверие к бренду выросло на',tv:29,tx:'Были написаны статьи и обзоры для охвата большой аудитории через информационные запросы.',s1:[29,'выросло доверие к бренду'],s2:[52,'выросло семантическое ядро запросов'],
+  ab:'Сеть современных автосервисов. Выполняет комплексное обслуживание: диагностика, ремонт двигателя и ходовой, обслуживание популярных марок, замена масел и расходников.'},
+ {t:'Фабрика мебели',ac:'#f2c08a',img:'img/case-furniture.webp',g:118,mo:['ОКТ','НОЯ','ДЕК','ЯНВ','ФЕВ','МАР','АПР','МАЙ'],v:[0,12,26,33,47,61,83,118],cols:['МАЙ','ФЕВ','ОКТ'],
+  rows:[['Купить кухонный стол',[3,12],15,48],['Кухонный стол из дерева',[2,17],19,65],['Шкаф из дерева купить',[4,14],18,63],['Кровать из дерева двуспальная',[5,16],21,77],['Деревянная кровать купить',[3,11],14,49],['Комод из массива дерева',[6,20],26,86],['Тумба прикроватная из дерева',[5,13],18,62],['Стеллаж из дерева купить',[7,15],22,67],['Мебель из массива дерева',[4,18],22,80]],
+  tt:'Видимость бренда в поиске выросла на',tv:62,tx:'Были написаны статьи и обзоры по ключевым категориям, расширено семантическое ядро и оптимизированы страницы каталога.',s1:[62,'выросла видимость бренда'],s2:[118,'вырос органический трафик'],
+  ab:'Производство мебели из натурального дерева на заказ. Широкий ассортимент: столы, кровати, шкафы, комоды и системы хранения.'},
+ {t:'Девелоперская компания',ac:'#ffd21a',img:'img/case-developer.webp',g:40,mo:['МАЙ','ИЮН','ИЮЛ','АВГ','СЕН','ОКТ','НОЯ','ДЕК','ЯНВ'],v:[0,13,21,23,24,23,31,28,40],cols:['ДЕК','АВГ','МАЙ'],
+  rows:[['Застройщик',[3,34],[37,62],99],['Строительная компания',[8,3],[11,4],15],['Застройщик ЖК',[6,8],[14,37],51],['Строительный сайт',[2,40],[42,25],67],['Официальный сайт застройщика',[2,17],[19,1],'—']],
+  tt:'Доверие к бренду выросло на',tv:55,tx:'Были написаны статьи и обзоры для охвата большей аудитории через информационные запросы.',s1:[55,'выросло доверие к бренду'],s2:[70,'выросло семантическое ядро запросов'],
+  ab:'Строительная компания / застройщик, реализует жилую и коммерческую недвижимость в построенных жилых комплексах.'}
+];
+
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const mq=matchMedia('(max-width:900px)');
+const fmt=n=>n.toLocaleString('ru-RU').replace(/ /g,' ');
+const ARR='<svg><use href="#arr"/></svg>';
+
+/* тарифы */
+$('#cards').innerHTML=PLANS.map((p,i)=>`<article class="card${p.pop?' pop':''}" style="--i:${i}">${p.pop?'<span class="badge">Популярный</span>':''}
+ <h3>${esc(p.n)}</h3><div class="sub">${esc(p.s)}</div>
+ <div class="price"><span>₽<span data-count="${p.p}">${fmt(p.p)}</span></span><small>/ мес.</small></div>
+ <ul class="feat">${p.f.map(f=>f[0]=='*'?`<li class="b">${esc(f.slice(1))}</li>`:`<li>${esc(f)}</li>`).join('')}</ul>
+ <button class="btn${p.pop?' red':''}" data-open data-plan="${esc(p.n)}">Выбрать тариф ${ARR}</button></article>`).join('');
+$('#pdots').innerHTML=PLANS.map((_,i)=>`<i class="${i?'':'on'}"></i>`).join('');
+$('#cards').addEventListener('scroll',e=>{const c=e.target,w=c.firstElementChild.offsetWidth+14,k=Math.round(c.scrollLeft/w);$$('#pdots i').forEach((d,j)=>d.classList.toggle('on',j==k))},{passive:true});
+
+/* кейсы */
+const cell=c=>Array.isArray(c)?`${c[0]}${c[1]?`<sup>+${c[1]}</sup>`:''}`:esc(c);
+$('#track').innerHTML=CASES.map((c,i)=>`<article class="slide" style="--ac:${c.ac}" data-i="${i}">
+ <div class="bgfx"></div>
+ <svg class="orbit back" data-path="M-60 560 C 300 260, 700 60, 1100 120 S 1600 300, 1750 330" style="z-index:0;opacity:.85"></svg>
+ <div class="s-main">
+  <div class="s-head"><div class="eyebrow">05 <span style="opacity:.5">/</span> <b>КЕЙСЫ</b></div><h2>${esc(c.t)}<span class="d">.</span></h2></div>
+  <div class="box chart"><div class="chart-top"><h3>Рост трафика ${c.g}% за год</h3><span class="src"><i></i>Яндекс Метрика</span></div>
+   <div class="leg"><i></i>Количество переходов (шт.)</div><div class="fig" data-c="${i}"><svg></svg></div></div>
+  <div class="s-bot">
+   <div class="box tbl"><table class="q"><thead><tr><th>ЗАПРОСЫ</th>${c.cols.map(m=>`<th>${m}</th>`).join('')}</tr></thead>
+    <tbody>${c.rows.map((r,j)=>`<tr style="--i:${j}"><td>${esc(r[0])}</td><td>${cell(r[1])}</td><td>${cell(r[2])}</td><td>${cell(r[3])}</td></tr>`).join('')}</tbody></table></div>
+   <div class="box trust"><h3>${esc(c.tt)} <em>${c.tv}%</em></h3><p>${esc(c.tx)}</p>
+    <div class="stats"><div class="stat"><b>На <span data-count="${c.s1[0]}">${c.s1[0]}</span>%</b><em>${esc(c.s1[1])}</em></div><div class="stat"><b>На <span data-count="${c.s2[0]}">${c.s2[0]}</span>%</b><em>${esc(c.s2[1])}</em></div></div></div>
+  </div>
+ </div>
+ <div class="s-side">
+  <p class="lead">Рост органического трафика, узнаваемости бренда и видимости в поиске.</p>
+  <div class="s-img"><img src="${c.img}" alt="${esc(c.t)}"></div>
+  <div class="about"><h3>О проекте</h3><p>${esc(c.ab)}</p></div>
+ </div></article>`).join('');
+const N=CASES.length,cs=$('#cases');
+for(let i=0;i<N;i++){const d=document.createElement('div');d.className='snapc';d.style.top=(i*100)+'vh';cs.prepend(d)}
+
+/* графики */
+function drawChart(fig){
+ const c=CASES[+fig.dataset.c],s=fig.querySelector('svg'),W=fig.clientWidth,H=fig.clientHeight;if(!W||!H)return;
+ const pl=24,pr=34,pt=40,pb=30,max=Math.max(...c.v)*1.08||1,n=c.v.length;
+ const X=i=>pl+(W-pl-pr)*i/(n-1),Y=v=>pt+(H-pt-pb)*(1-v/max);
+ const pts=c.v.map((v,i)=>[X(i),Y(v)]);
+ let d=`M${pts[0]}`;for(let i=1;i<n;i++){const[a,b]=pts[i-1],[e,f]=pts[i],m=(e-a)/2;d+=` C${a+m},${b} ${e-m},${f} ${e},${f}`}
+ const id='g'+fig.dataset.c,sm=W<520,last=n-1;
+ s.innerHTML=`<defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c.ac}" stop-opacity=".45"/><stop offset="1" stop-color="${c.ac}" stop-opacity="0"/></linearGradient></defs>
+ <line x1="${pl-10}" x2="${W-8}" y1="${H-pb}" y2="${H-pb}" stroke="rgba(255,255,255,.18)"/>
+ <path class="ar" d="${d} L${X(last)},${H-pb} L${X(0)},${H-pb}Z" fill="url(#${id})"/>
+ <path class="l" d="${d}" pathLength="1"/>
+ ${pts.map(([x,y],i)=>`<g style="--i:${i}"><circle class="pt" cx="${x}" cy="${y}" r="${i==last?7:5}" fill="#fff" stroke="${c.ac}" stroke-width="3"/>
+  ${i==last?`<g class="vl"><rect x="${x-36}" y="${y-44}" width="72" height="30" rx="15" fill="${c.ac}"/><text x="${x}" y="${y-23}" text-anchor="middle" style="fill:${c.ac=='#f2c08a'||c.ac=='#ffd21a'?'#1a1206':'#fff'}">${c.v[i]}%</text></g>`:`<text class="vl" x="${x}" y="${y-16}" text-anchor="middle">${c.v[i]}%</text>`}
+  ${!sm||i%2==0||i==last?`<text class="mo" x="${x}" y="${H-pb+22}" text-anchor="middle">${c.mo[i]}</text>`:''}</g>`).join('')}`;
+}
+const chartRO=new ResizeObserver(es=>es.forEach(e=>drawChart(e.target)));
+$$('.fig').forEach(f=>chartRO.observe(f));
+
+/* орбиты */
+function orbits(){$$('svg[data-path]').forEach(s=>{s.setAttribute('viewBox','0 0 1672 941');s.setAttribute('preserveAspectRatio','none');const d=s.dataset.path;s.innerHTML=`<path d="${d}" pathLength="1" class="ln" vector-effect="non-scaling-stroke"/><path d="${d}" pathLength="1" class="sp" vector-effect="non-scaling-stroke"/>`});
+ $$('svg[data-orbit]').forEach(s=>{
+ const [cx,cy,rx,ry,rot]=s.dataset.orbit.split(',').map(Number),front=s.hasAttribute('data-front'),uid='c'+Math.random().toString(36).slice(2,8);
+ s.setAttribute('viewBox','0 0 1672 941');s.setAttribute('preserveAspectRatio','xMidYMid slice');
+ const e=`<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" pathLength="1"`;
+ s.innerHTML=(front?`<defs><clipPath id="${uid}"><rect x="-500" y="${cy+ry*.15}" width="3000" height="2000" transform="rotate(${rot} ${cx} ${cy})"/></clipPath></defs>`:'')+
+ `<g transform="rotate(${rot} ${cx} ${cy})" ${front?`clip-path="url(#${uid})"`:''}>${e} class="ln"/>${e} class="sp"/></g>`;
+})}
+orbits();
+
+/* гигантские слова: подгонка и разбиение на буквы */
+$$('.gw').forEach(g=>{g.innerHTML=[...g.textContent].map((ch,i)=>`<i style="--i:${i}">${esc(ch)}</i>`).join('')});
+function fit(){
+ const m=mq.matches;
+ $$('.giant').forEach(gt=>{
+  const st=gt.parentElement,W=st.clientWidth,H=st.clientHeight,b=(m&&gt.dataset.mbox||gt.dataset.box).split(',').map(Number);
+  const g=gt.firstElementChild;g.style.fontSize='100px';g.style.setProperty('--sy',1);
+  const w0=g.offsetWidth,h0=g.offsetHeight;const fs=100*(W*b[2]/100)/w0;
+  g.style.fontSize=fs+'px';const sy=Math.min(1.9,Math.max(1,(H*b[3]/100)/(h0*fs/100)));g.style.setProperty('--sy',sy);
+  gt.style.left=b[0]+'%';gt.style.top=b[1]+'%';
+ });
+ $$('.photo').forEach(p=>{
+  if(!p.dataset.d)p.dataset.d=p.getAttribute('style');
+  p.setAttribute('style',p.dataset.d+(m&&p.dataset.m?';'+p.dataset.m:''));
+ });
+}
+document.fonts.ready.then(fit);fit();addEventListener('resize',fit);
+
+/* появление блоков, пейджер, навигация */
+const secs=$$('main .sec'),pag=$$('#pager a');
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');countIn(e.target);
+ const k=secs.indexOf(e.target);pag.forEach((a,j)=>a.classList.toggle('on',j==k));
+ $$('#nav a').forEach(a=>a.classList.toggle('on',a.getAttribute('href')=='#'+e.target.id))}}),{threshold:.35});
+secs.forEach(s=>io.observe(s));
+const ioCases=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){cs.classList.add('in');pag.forEach((a,j)=>a.classList.toggle('on',j==4))}}),{threshold:0,rootMargin:'-45% 0px -45% 0px'});
+ioCases.observe(cs);
+
+function countIn(root){root.querySelectorAll('[data-count]:not(.done)').forEach(el=>{
+ el.classList.add('done');const to=+el.dataset.count,t0=performance.now(),dur=1400;
+ if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+ const tick=t=>{const k=Math.min(1,(t-t0)/dur),e=1-(1-k)**3;el.textContent=fmt(Math.round(to*e));if(k<1)requestAnimationFrame(tick)};requestAnimationFrame(tick)})}
+
+/* параллакс мышью */
+if(matchMedia('(pointer:fine)').matches)$$('[data-par]').forEach(s=>s.addEventListener('pointermove',e=>{
+ const r=s.getBoundingClientRect();s.style.setProperty('--mx',((e.clientX-r.left)/r.width-.5)*2);s.style.setProperty('--my',((e.clientY-r.top)/r.height-.5)*2)}));
+
+/* горизонтальная галерея */
+const track=$('#track'),slides=$$('.slide');let cur=-1;
+function setActive(k){if(k==cur)return;cur=k;slides.forEach((s,j)=>{if(j==k){s.classList.add('on');countIn(s)}});
+ $('#ccount').textContent=String(k+1).padStart(2,'0')+' / '+String(N).padStart(2,'0');
+ $('#cprev').disabled=k==0;$('#cnext').disabled=k==N-1}
+function onScroll(){
+ $('#hdr').classList.toggle('solid',scrollY>40);
+ if(mq.matches)return;
+ const r=cs.getBoundingClientRect(),vh=innerHeight,p=Math.min(1,Math.max(0,-r.top/(r.height-vh)));
+ track.style.transform=`translate3d(${-p*(N-1)*innerWidth}px,0,0)`;
+ $('#cbar').style.setProperty('--p',(p*(N-1)+1)/N);
+ if(r.top<vh*.5&&r.bottom>vh*.5)setActive(Math.round(p*(N-1)));
+}
+addEventListener('scroll',onScroll,{passive:true});onScroll();
+track.addEventListener('scroll',()=>{if(!mq.matches)return;const k=Math.round(track.scrollLeft/track.clientWidth);$('#cbar').style.setProperty('--p',(k+1)/N);setActive(k)},{passive:true});
+function go(k){k=Math.max(0,Math.min(N-1,k));
+ if(mq.matches)track.scrollTo({left:k*track.clientWidth,behavior:'smooth'});
+ else scrollTo({top:cs.offsetTop+k*innerHeight,behavior:'smooth'})}
+$('#cprev').onclick=()=>go(cur-1);$('#cnext').onclick=()=>go(cur+1);
+addEventListener('keydown',e=>{const r=cs.getBoundingClientRect();if(r.top>innerHeight*.5||r.bottom<innerHeight*.5)return;
+ if(e.key=='ArrowRight'){e.preventDefault();go(cur+1)}if(e.key=='ArrowLeft'){e.preventDefault();go(cur-1)}});
+mq.addEventListener('change',()=>{track.style.transform='';cur=-1;fit();onScroll();if(mq.matches)setActive(0)});
+if(mq.matches)setActive(0);
+setTimeout(()=>{if(cur<0)setActive(0)},50);
+
+/* меню */
+const body=document.body;
+$('#burger').onclick=()=>body.classList.toggle('menu-open');
+$$('#mnav a').forEach(a=>a.addEventListener('click',()=>body.classList.remove('menu-open')));
+
+/* модальное окно заявки */
+const modal=$('#modal');
+document.addEventListener('click',e=>{const o=e.target.closest('[data-open]');if(o){body.classList.remove('menu-open');modal.classList.add('open');
+ if(o.dataset.plan)$('#f-plan').value=o.dataset.plan;$('#fnote').textContent='';setTimeout(()=>$('#f-name').focus(),300)}
+ if(e.target.closest('[data-close]')||e.target==modal)modal.classList.remove('open')});
+addEventListener('keydown',e=>{if(e.key=='Escape'){modal.classList.remove('open');body.classList.remove('menu-open')}});
+$('#form').addEventListener('submit',e=>{e.preventDefault();$('#fnote').textContent='Отправка заявок пока не подключена — подключите почту, Telegram-бота или CRM.'});
+}
+</script>
+</body>
+</html>
