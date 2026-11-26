@@ -150,12 +150,12 @@ h1,h2,h3{margin:0;font-weight:700;line-height:1.08;text-wrap:balance}
 /* cases */
 #cases{overflow:hidden}
 .c-sticky{position:relative;height:100%;overflow:hidden}
-.track{display:flex;height:100%;will-change:transform;transition:transform 1.15s cubic-bezier(.65,0,.25,1)}
-.slide{transition:opacity .9s ease}.slide:not(.now){opacity:0}
-.slide [data-a]{opacity:0;transform:translateY(40px);transition:opacity .8s var(--ease),transform 1s var(--ease);transition-delay:0s}
+.track{display:flex;height:100%;will-change:transform;transition:transform .7s cubic-bezier(.65,0,.25,1)}
+.slide{transition:opacity .5s ease}.slide:not(.now){opacity:0}
+.slide [data-a]{opacity:0;transform:translateY(40px);transition:opacity .5s var(--ease),transform .6s var(--ease);transition-delay:0s}
 .slide [data-a=l]{transform:translateX(-50px)}.slide [data-a=r]{transform:translateX(60px)}
-.slide.now [data-a]{opacity:1;transform:none;transition-delay:calc(var(--d,0)*1s + .35s)}
-.slide .s-head h2{clip-path:inset(0 100% 0 0);transition:clip-path 1.1s var(--ease)}.slide.now .s-head h2{clip-path:inset(0 0 0 0);transition-delay:.3s}
+.slide.now [data-a]{opacity:1;transform:none;transition-delay:calc(var(--d,0)*.6s + .15s)}
+.slide .s-head h2{clip-path:inset(0 100% 0 0);transition:clip-path .6s var(--ease)}.slide.now .s-head h2{clip-path:inset(0 0 0 0);transition-delay:.1s}
 .slide{--ac:#1e9bff;flex:none;width:100vw;height:100%;position:relative;padding:max(11vh,92px) 4vw 7vh;display:grid;grid-template-columns:minmax(0,2.2fr) minmax(0,1fr);gap:2.4vw;isolation:isolate;overflow-y:auto;scrollbar-width:none}
 .slide .bgfx{background:radial-gradient(45% 60% at 88% 45%,color-mix(in srgb,var(--ac) 18%,transparent),transparent 70%),linear-gradient(180deg,#0a1016,#05080c)}
 .s-main,.s-side{position:relative;z-index:3}.s-main{display:grid;grid-template-rows:auto minmax(0,1fr) minmax(0,1.35fr);gap:2.2vh}
@@ -172,8 +172,8 @@ h1,h2,h3{margin:0;font-weight:700;line-height:1.08;text-wrap:balance}
 .fig{position:relative;flex:1;min-height:120px}
 .fig svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
 .fig .ar{opacity:0;transition:opacity 1.2s .8s}
-.fig .l{fill:none;stroke:var(--ac);stroke-width:3;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 1.8s var(--ease) .2s;filter:drop-shadow(0 0 6px var(--ac))}
-.fig .pt,.fig .vl{opacity:0;transition:opacity .5s;transition-delay:calc(var(--i)*.15s + .4s)}
+.fig .l{fill:none;stroke:var(--ac);stroke-width:3;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 1s var(--ease) .15s;filter:drop-shadow(0 0 6px var(--ac))}
+.fig .pt,.fig .vl{opacity:0;transition:opacity .5s;transition-delay:calc(var(--i)*.08s + .2s)}
 .now .fig .l{stroke-dashoffset:0}.now .fig .ar,.now .fig .pt,.now .fig .vl{opacity:1}
 .fig text{fill:#fff;font:700 15px var(--hd)}
 .fig .vl{fill:color-mix(in srgb,var(--ac) 35%,#fff)}
@@ -188,7 +188,7 @@ h1,h2,h3{margin:0;font-weight:700;line-height:1.08;text-wrap:balance}
 .q td:nth-child(3){background:rgba(26,160,70,.14)}
 .q.dense td{padding-block:.28vh}.q.dense{font-size:min(1.45vh,14px)}
 .q td sup{color:#4dff7c;font-size:.75em;font-weight:700;margin-left:2px}
-.q tr{opacity:0;transform:translateX(-12px);transition:.5s var(--ease);transition-delay:calc(var(--i)*.05s + .3s)}
+.q tr{opacity:0;transform:translateX(-12px);transition:.5s var(--ease);transition-delay:calc(var(--i)*.03s + .2s)}
 .now .q tr{opacity:1;transform:none}
 .trust{padding:2vh 1.6vw;display:flex;flex-direction:column}
 .trust h3{font-size:clamp(20px,1.95vw,32px);font-weight:800}
@@ -215,7 +215,7 @@ h1,h2,h3{margin:0;font-weight:700;line-height:1.08;text-wrap:balance}
 .c-l:hover{transform:translateX(-3px)}.c-r:hover{transform:translateX(3px)}
 .c-arr svg{width:20px;height:20px}
 #ctimer{position:absolute;left:0;top:0;bottom:0;width:calc(100%/6);left:calc((var(--p,0) - 1/6)*100%);background:rgba(255,255,255,.55);transform-origin:left;transform:scaleX(0)}
-#ctimer.run{animation:ctime 7s linear forwards}@keyframes ctime{to{transform:scaleX(1)}}
+#ctimer.run{animation:ctime 2s linear forwards}@keyframes ctime{to{transform:scaleX(1)}}
 .c-bar i{opacity:.55}
 
 .foot{position:relative;overflow:hidden;height:100vh;height:100svh;display:flex;flex-direction:column;justify-content:center;padding:max(12vh,96px) 5vw 0;background:radial-gradient(60% 90% at 75% 0%,rgba(255,255,255,.04),transparent 60%),#0a0b0e;color:#fff;isolation:isolate}
@@ -662,7 +662,7 @@ function countIn(root){root.querySelectorAll('[data-count]:not(.done)').forEach(
  const tick=t=>{const k=Math.min(1,(t-t0)/dur),e=1-(1-k)**3;el.textContent=fmt(Math.round(to*e));if(k<1)requestAnimationFrame(tick)};requestAnimationFrame(tick)})}
 
 /* ===== карусель кейсов: слайдшоу + стрелки ===== */
-const AUTO=7000;let autoT=null,pauseUntil=0;
+const AUTO=2000;let autoT=null,pauseUntil=0;
 function showCase(k){k=(k+N)%N;cur=k;
  track.style.transform=`translate3d(${-k*100}vw,0,0)`;
  slides.forEach((x,j)=>{x.classList.toggle('now',j==k);if(j==k){x.scrollTop=0;x.classList.add('on');countIn(x)}});
@@ -672,10 +672,10 @@ function showCase(k){k=(k+N)%N;cur=k;
 }
 const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
 function startAuto(){clearInterval(autoT);if(reduce)return;autoT=setInterval(()=>{if(STOPS[S]!=cs||busy()||performance.now()<pauseUntil||document.hidden)return;showCase(cur+1)},AUTO)}
-function manual(d){pauseUntil=performance.now()+AUTO*1.5;showCase(cur+d);startAuto()}
+function manual(d){pauseUntil=performance.now()+5000;showCase(cur+d);startAuto()}
 $('#cprev').onclick=()=>manual(-1);$('#cnext').onclick=()=>manual(1);
-slides.forEach(x=>x.addEventListener('scroll',()=>{pauseUntil=performance.now()+AUTO*1.5},{passive:true}));
-cs.addEventListener('pointerdown',e=>{if(!e.target.closest('.c-arr'))pauseUntil=performance.now()+AUTO*1.5});
+slides.forEach(x=>x.addEventListener('scroll',()=>{pauseUntil=performance.now()+5000},{passive:true}));
+cs.addEventListener('pointerdown',e=>{if(!e.target.closest('.c-arr'))pauseUntil=performance.now()+5000});
 
 const scroller=()=>STOPS[S]==cs?slides[cur]:STOPS[S];
 const canScroll=(el,d)=>{const o=getComputedStyle(el).overflowY;if(o!='auto'&&o!='scroll')return false;return d>0?el.scrollTop+el.clientHeight<el.scrollHeight-2:el.scrollTop>2};
